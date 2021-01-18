@@ -4,6 +4,7 @@ public class WrapperExam {
 
 	public static void main(String[] args) {
 		// 자바중급 파트2 java.lang 패키지/오토박싱
+		// lang 패키지는 import 없어도 됨.
 		// Integer는 class이기 때문에 필드(속성)와 메소드를 가진다.
 		// 기본형 타입은 필드와 메서드를 가질 수 없다.
 		
