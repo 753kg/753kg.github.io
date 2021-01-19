@@ -3,7 +3,7 @@ package javaIntermediate;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DataExam {
+public class DateExam {
 
 	public static void main(String[] args) {
 		// 자바중급 파트4 Date 클래스
