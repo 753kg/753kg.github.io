@@ -9,6 +9,8 @@ public class CheckedExceptionApp {
 		// 생활코딩 JAVA Exception - Checked vs Unchecked Exception
 		// checked exception -> 꼭 예외처리를 해야 함.
 		// Unchecked -> 예외처리를 하지 않아도 컴파일이 됨.
+		// checked exception : RuntimeException과 이 클래스의 자식 클래스들
+		// unchecked exception : RuntimeException 제외 모든 것. ex)IOException
 		
 		FileWriter f = null;	// null : 값이 없다
 		
