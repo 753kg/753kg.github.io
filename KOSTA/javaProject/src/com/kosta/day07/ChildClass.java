@@ -10,7 +10,7 @@ public class ChildClass extends ParentClass {
 	}
 	
 	public ChildClass(String name) {
-		//super();
+		//super(); 호출
 		this.name = name;
 		System.out.println("3. Child(String name) call");
 	}

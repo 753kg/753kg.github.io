@@ -12,7 +12,7 @@ public class CheckingAccount extends Account {
 	public CheckingAccount(String accNo, String ownerName, int balance, String cardNo) {
 		super(accNo, ownerName, balance);	// 부모(Account)가 먼저 생성됨
 		this.cardNo = cardNo;
-//		private이라 불가능
+//		private이라 불가능 -> super 쓰기
 //		this.accNo = accNo;
 //		this.ownerName = ownerName;
 //		this.balance = balance;
@@ -24,7 +24,7 @@ public class CheckingAccount extends Account {
 			System.out.println("카드번호 오류..... 지불 불가");
 			return 0;
 		}
-		return withdraw(amount);
+		return withdraw(amount);	// 상속받은 메서드
 	}
 
 	public String getCardNo() {

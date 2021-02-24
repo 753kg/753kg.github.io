@@ -6,8 +6,8 @@ public class AccountTest {
 //		method1();
 //		method2();
 //		method3();
-//		method4();
-		method5();
+		method4();
+//		method5();
 
 	}
 	
@@ -34,6 +34,7 @@ public class AccountTest {
 		// Object 생성 -> Account 생성 -> CheckingAccount 생성됨
 		CheckingAccount acc = new CheckingAccount("111", "kim", 1000, "5555");
 		
+		// 자식클래스는 부모클래스의 타입이기 때문에 "자식클래스 객체 instanceof 부모클래스 타입"은 true가 됩니다.
 		System.out.println(acc instanceof Object);
 		System.out.println(acc instanceof Account);
 		System.out.println(acc instanceof CheckingAccount);

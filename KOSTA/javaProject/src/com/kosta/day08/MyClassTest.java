@@ -4,7 +4,7 @@ public class MyClassTest {
 
 	public static void main(String[] args) {
 		
-		// RemoteControl 타입이라 구현한 클래스 모두 들어갈 수 있다.
+		// RemoteControl 타입이라 RermoteControl을 구현한 클래스 모두 들어갈 수 있다.
 		MyClass myClass = new MyClass(new Television());
 		MyClass myClass2 = new MyClass(new Audio());
 		MyClass myClass3 = new MyClass(new SmartTelevision());

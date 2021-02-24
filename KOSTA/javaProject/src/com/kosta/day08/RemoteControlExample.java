@@ -3,8 +3,8 @@ package com.kosta.day08;
 public class RemoteControlExample {
 
 	public static void main(String[] args) {
-//		method1(new Television());
-		method3();					// SmartTelevision
+		method1(new Television());
+//		method3();					// SmartTelevision
 		
 		
 		// Interface를 구현한 익명의 class
