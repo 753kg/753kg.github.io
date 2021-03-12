@@ -10,7 +10,7 @@ import util.DBUtil;
 public class ConnectionSample3 {
 
 	public static void main(String[] args) {
-		// ¸ðµçºÎ¼­Á¶È¸
+		// ëª¨ë“ ë¶€ì„œì¡°íšŒ
 		Connection conn = DBUtil.getConnection();
 		Statement st = null;
 		ResultSet rs = null;
@@ -20,7 +20,7 @@ public class ConnectionSample3 {
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
 			while(rs.next()) {
-				int id = rs.getInt(1);	// Ã¹¹øÂ° ÄÃ·³
+				int id = rs.getInt(1);	// ì²«ë²ˆì§¸ ì»¬ëŸ¼
 				String name = rs.getString(2);
 				System.out.println(id + "\t" + name);
 			}

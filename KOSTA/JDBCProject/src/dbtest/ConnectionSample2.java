@@ -7,7 +7,7 @@ public class ConnectionSample2 {
 	public static void main(String[] args) {
 		// JDBC(Java DataBase Connection)
 		
-//		String driverName = "oracle.jdbc.driver.OracleDriver";		// µÑ´ÙµÊ
+//		String driverName = "oracle.jdbc.driver.OracleDriver";		// ë‘˜ë‹¤ë¨
 		String driverName = "oracle.jdbc.OracleDriver";
 		String url = "jdbc:oracle:thin:@192.168.0.172:1521:xe";
 		String userid = "hr", password = "hr";
@@ -18,15 +18,15 @@ public class ConnectionSample2 {
 		
 		try {
 			Class.forName(driverName);
-			System.out.println("1. class load ¼º°ø");
+			System.out.println("1. class load ì„±ê³µ");
 			conn = DriverManager.getConnection(url, userid, password);
-			System.out.println("2. Connection ¼º°ø");
-			st = conn.createStatement();				// Åë·Î ¸¸µé±â
+			System.out.println("2. Connection ì„±ê³µ");
+			st = conn.createStatement();				// í†µë¡œ ë§Œë“¤ê¸°
 			rs = st.executeQuery(sql);
-			System.out.println("3. SQL ¹®Àå ½ÇÇà ¼º°ø");
+			System.out.println("3. SQL ë¬¸ì¥ ì‹¤í–‰ ì„±ê³µ");
 			while(rs.next()) {
 				String fname = rs.getString(2);
-				int salary = rs.getInt("salary");	// ÄÃ·³ÀÌ¸§ÁÖ±â
+				int salary = rs.getInt("salary");	// ì»¬ëŸ¼ì´ë¦„ì£¼ê¸°
 				Date d = rs.getDate("hire_date");
 				System.out.println(fname + "\t" + salary + "\t" + d);
 			}

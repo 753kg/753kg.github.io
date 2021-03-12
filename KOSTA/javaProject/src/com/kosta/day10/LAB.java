@@ -13,9 +13,10 @@ public class LAB {
 			char c = s.charAt(i);
 			if(c == ' ') continue;
 			
-			char c2 = (char)(s.charAt(i) + 3);
-			if(c2 > 'z') c2 -= ('z'+1)-'a';
-			cc[i] = c2;
+			c += 3;
+			if(c > 'z') c -= ('z'+1)-'a';
+			
+			cc[i] = c;
 		}
 		s = String.valueOf(cc);
 		System.out.println(s);

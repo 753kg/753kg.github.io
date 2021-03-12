@@ -15,18 +15,27 @@ public class StringTest {
 		// String : 고정문자열, 절대 변경 불가
 		String s = new String("고정문자열");
 		System.out.println(System.identityHashCode(s));	// s 객체의 해시코드값. 주소
+		
 		s = s + "수정.. 실제수정되진않음";		// 새로 만들어지고 주소를 얻음
 		s.replace("수정", "***");		//원본 수정 안된다.
-		System.out.println(System.identityHashCode(s));	// 새로운 주소를 가리킴
+		System.out.println(s.replace("수정", "***"));
+		
 		System.out.println(s);
+		System.out.println(System.identityHashCode(s));	// 새로운 주소를 가리킴
+		System.out.println("======================================");
 		
 		// StringBuffer, StringBuilder : 가변문자열, 변경 가능, But + 연산자 불가능
 		StringBuffer sb = new StringBuffer("가변문자열이다");
-//		sb = sb + " + 연산자 불가능";
+		System.out.println(sb);
+
+		//		sb = sb + " + 연산자 불가능";
 		sb.append("수정...실제수정된다.");
+		System.out.println(sb);
+	
 		sb.replace(7, 9, "***");
 		System.out.println(sb);
-		
+		System.out.println("======================================");
+
 		StringBuilder sb2 = new StringBuilder("가변문자열이다");
 		sb2.append("수정...실제수정된다.");
 		sb2.replace(7, 9, "***");
@@ -68,9 +77,9 @@ public class StringTest {
 //		int a = System.in.read();	// 입력받은 값을 int로 1byte만 리턴
 		int a;
 		while ((a = System.in.read()) != 13) {	// 입력 끝날 때까지 1byte씩 리턴
-			System.out.println((char)a);
+			System.out.print((char)a);
 		}
-		
+		System.out.println();
 		System.out.println(a);
 	}
 

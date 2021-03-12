@@ -22,7 +22,7 @@ public class ClassTest {
 		System.out.println(cls2.getSimpleName());
 		
 		// 객체얻기
-		Object obj = cls2.newInstance();	// 기본생성자를 호출
+		Object obj = cls2.newInstance();	// className의 기본생성자를 호출
 		if(obj instanceof Book) {
 			String s = ((Book)obj).getTitle();
 			System.out.println(s);
@@ -83,8 +83,8 @@ public class ClassTest {
 		Book b = new Book("java", 10000, false);
 		Class cls1 = b.getClass();			// Book의 메타데이터 얻기
 		System.out.println(cls1.getName());	// 이름
-		System.out.println(cls1.getPackageName());
-		System.out.println(cls1.getModifiers());
+		System.out.println(cls1.getPackage().getName());
+		System.out.println(cls1.getModifiers());	// class의 접근지정자
 		
 		try {
 			Class cls2 = Class.forName("com.kosta.day10.Book");		// class를 메모리에 로드

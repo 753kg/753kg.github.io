@@ -25,7 +25,7 @@ public class LambdaExample2 {
 			System.out.println("num1= " + num1);
 			System.out.println("num2= " + num2);
 			return num1 + num2;
-			};
+		};
 		int result = a.print(100, 200);
 		System.out.println("result= " + result);
 	}

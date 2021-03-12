@@ -10,5 +10,7 @@ public class FromIntRangeExample {
 		IntStream stream = IntStream.range(1,  100);	// range -> 마지막값 제외
 		stream.forEach(a -> sum += a);
 		System.out.println("총합: " + sum);
+		
+		
 	}
 }

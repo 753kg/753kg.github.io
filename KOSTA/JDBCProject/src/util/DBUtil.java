@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class DBUtil {
 	
-	// 1. DB ¿¬°áÀ» ¸¸µé¾îÁÖ±â
+	// 1. DB ì—°ê²°ì„ ë§Œë“¤ì–´ì£¼ê¸°
 	public static Connection getConnection() {
 		Connection conn = null;
 		String driverName = "oracle.jdbc.driver.OracleDriver";
@@ -26,7 +26,7 @@ public class DBUtil {
 		return conn;
 	}
 	
-	// 2. ÀÚ¿ø ¹İ³³
+	// 2. ìì› ë°˜ë‚©
 	public static void dbClose(ResultSet rs, Statement st, Connection conn) {
 		try {
 			if(rs != null) rs.close();

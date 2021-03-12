@@ -7,7 +7,7 @@ import java.util.Set;
 public class SystemTest {
 
 	public static void main(String[] args) {
-		method4();
+		method3();
 	}
 
 	private static void method4() {
@@ -40,7 +40,7 @@ public class SystemTest {
 
 	private static void method1() {
 		// 대표적인 key값들을 넣음 p.486
-		System.out.println(System.getProperty("java.name"));
+		System.out.println(System.getProperty("user.name"));
 		System.out.println(System.getProperty("java.version"));
 		System.out.println(System.getProperty("os.name"));
 	}

@@ -177,9 +177,9 @@ select * from KOSTA_STUDENT;
 select first_name, 
 	length(first_name) 자릿수, 
 	substr(first_name, 1, 3) "첨부터3자리",
-	substr(first_name, 2) "2번째부터끝까지",
-	substr(first_name, -3, 3) "뒤에서3번째부터3자리",
-	substr(first_name, -3) "뒤에서3번째부터끝까지"
+	substr(first_name, 2) "2부터끝까지",
+	substr(first_name, -3, 3) "뒤3번째부터3",
+	substr(first_name, -3) "뒤3번째부터끝"
 from EMPLOYEES;
 
 -----------------------1번째부터 2자리

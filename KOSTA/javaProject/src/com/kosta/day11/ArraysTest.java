@@ -75,6 +75,8 @@ public class ArraysTest {
 		});
 		System.out.println("desc sort:"+Arrays.toString(arr));
 		
+		// CharDescending aa = new CharDescending();		
+		// Arrays.sort(arr3, aa);
 		Arrays.sort(arr3, new CharDescending());
 		System.out.println("desc sort:"+Arrays.toString(arr3));
 

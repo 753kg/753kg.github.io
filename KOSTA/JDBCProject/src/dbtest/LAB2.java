@@ -12,10 +12,10 @@ import util.DBUtil;
 public class LAB2 {
 
 	public static void main(String[] args) {
-		// ±Þ¿©¸¦ °¡º¯À¸·Î ÀÔ·Â¹Þ¾Æ¼­ ÀÔ·Â°ª ÀÌ»óÀÇ ±Þ¿©¸¦ ¹Þ´Â Á÷¿ø Á¶È¸
-		// Á÷¿øÀÌ¸§, ±Þ¿©, ÀÔ»çÀÏ, ºÎ¼­¹øÈ£ Ãâ·Â
+		// ê¸‰ì—¬ë¥¼ ê°€ë³€ìœ¼ë¡œ ìž…ë ¥ë°›ì•„ì„œ ìž…ë ¥ê°’ ì´ìƒì˜ ê¸‰ì—¬ë¥¼ ë°›ëŠ” ì§ì› ì¡°íšŒ
+		// ì§ì›ì´ë¦„, ê¸‰ì—¬, ìž…ì‚¬ì¼, ë¶€ì„œë²ˆí˜¸ ì¶œë ¥
 		Scanner sc = new Scanner(System.in);
-		System.out.print("±Þ¿© ÀÔ·Â>> ");
+		System.out.print("ê¸‰ì—¬ ìž…ë ¥>> ");
 		int inputSal = sc.nextInt();
 		
 		Connection conn = DBUtil.getConnection();

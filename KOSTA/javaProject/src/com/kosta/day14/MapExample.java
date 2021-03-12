@@ -16,14 +16,23 @@ public class MapExample {
 		int maxScore = 0;		// 최고 점수 저장
 		int totalScore = 0;		// 점수 합계 저장
 		
-		for(Entry<String, Integer> entry : map.entrySet()) {
-			int score = entry.getValue();
+		for(String key:map.keySet()) {
+			int score = map.get(key);
 			totalScore += score;
 			if(maxScore < score) {
 				maxScore = score;
-				name = entry.getKey();
+				name = key;
 			}
 		}
+		
+//		for(Entry<String, Integer> entry : map.entrySet()) {
+//			int score = entry.getValue();
+//			totalScore += score;
+//			if(maxScore < score) {
+//				maxScore = score;
+//				name = entry.getKey();
+//			}
+//		}
 		
 		//평균점수
 		int avg = totalScore / map.size();

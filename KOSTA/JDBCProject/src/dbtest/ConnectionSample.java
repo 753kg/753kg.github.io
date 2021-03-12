@@ -9,36 +9,36 @@ import java.sql.Statement;
 public class ConnectionSample {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
-		// DB ¿¬°á ¹æ¹ı
+		// DB ì—°ê²° ë°©ë²•
 		
-		// 1. Oracle Driver ÁØºñ >> .jar
+		// 1. Oracle Driver ì¤€ë¹„ >> .jar
 		String driverName = "oracle.jdbc.driver.OracleDriver";
-		Class.forName(driverName);		// driver¸¦ ¸Ş¸ğ¸®¿¡ ¿Ã¸®±â
-		System.out.println("1. driver load ¼º°ø");
+		Class.forName(driverName);		// driverë¥¼ ë©”ëª¨ë¦¬ì— ì˜¬ë¦¬ê¸°
+		System.out.println("1. driver load ì„±ê³µ");
 		
-		// 2. DB ¿¬°á : Connection Class »ç¿ë
+		// 2. DB ì—°ê²° : Connection Class ì‚¬ìš©
 		Connection conn = null;
-		// ³ªÀÇoracle->Properties->DriverProperties->ConnectionURL
+		// ë‚˜ì˜oracle->Properties->DriverProperties->ConnectionURL
 		String url ="jdbc:oracle:thin:@localhost:1521:xe";
 		String userid = "hr", password = "hr";
 		conn = DriverManager.getConnection(url, userid, password);
-		System.out.println("2. Connection ¼º°ø");
+		System.out.println("2. Connection ì„±ê³µ");
 		
-		// 3. SQL¹® ½ÇÇà
+		// 3. SQLë¬¸ ì‹¤í–‰
 		String sql = 
 				" select first_name, last_name, salary" +
 				" from employees" +
 				" where employee_id = 100";
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(sql);
-		while(rs.next()) {	// ´ÙÀ½°ÔÀÖ´ÂÁöÈ®ÀÎ
+		while(rs.next()) {	// ë‹¤ìŒê²ŒìˆëŠ”ì§€í™•ì¸
 			String fname = rs.getString(1);
 			String lname = rs.getString(2);
 			int sal = rs .getInt(3);
 			System.out.println(fname + "\t" + lname + "\t" + sal);
 		}	
 		 
-			 // ÀÚ¿ø¹İ³³... DB¿¬°áÇØÁ¦
+			 // ìì›ë°˜ë‚©... DBì—°ê²°í•´ì œ
 			 rs.close();
 			 st.close();
 			 conn.close();
