@@ -18,7 +18,7 @@ public class EmpController {
 		// 3. 부서번호로 조회
 		// method3(60);
 		// 4. job_id로 조회
-		// method4("IT_PROG");
+		 method4("IT_PROG");
 		// 5. 급여로 조회
 		// method5(10000, 15000);
 		// 6. 입사일로 조회- String, Date
@@ -27,7 +27,7 @@ public class EmpController {
 		// 7. 이름에 특정문자가 들어간 사람 조회
 		// method8("ex");
 		// 8. 여러 조건으로 조회 (부서, job, salary, hire_date)
-		method9(60, "IT_PROG", 1000, "2005-01-01");
+		// method9(60, "IT_PROG", 1000, "2005-01-01");
 	}
 
 	
