@@ -282,25 +282,19 @@ from employees join jobs using(job_id);
 5. 각 부서별로 최저급여를 받는 직원의 이름과 부서id, 급여를 조회하시오.
 select first_name, department_id, salary
 from employees
-where employee_id = (select employee_id
-                from employees
-                group by department_id
-                having salary = min(salary));
-
-select min(salary)
-                 from employees
-                group by department_id);
-                
-select department_id, min(salary)
-from employees
-group by department_id;
-
-select * from employees
+where (department_id , salary) in (select department_id, min(salary)
+                                    from employees
+                                    group by department_id);
 
 
 -- 연습문제
 1. 80번부서의 평균급여보다 많은 급여를 받는 직원의 이름, 부서id, 급여를 조회하시오.
-
+select first_name, department_id, salary
+from employees
+where salary >= (
+                select avg(salary)
+                from employees
+                where department_id = 80 );
 
 2. 'South San Francisco'에 근무하는 직원의 최소급여보다 급여를 많이 받으면서 
 50 번부서의 평균급여보다 많은 급여를 받는 직원의 이름, 급여, 부서명, 
