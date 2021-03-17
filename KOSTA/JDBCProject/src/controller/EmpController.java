@@ -1,6 +1,8 @@
 package controller;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,6 +13,10 @@ import view.EmpView;
 public class EmpController {
 
 	public static void main(String[] args) {
+		
+		// 입력 test
+		method10();
+		
 		// 1. 모든직원조회
 		// method1();
 		// 2. 기본키로 조회
@@ -18,7 +24,7 @@ public class EmpController {
 		// 3. 부서번호로 조회
 		// method3(60);
 		// 4. job_id로 조회
-		 method4("IT_PROG");
+		// method4("IT_PROG");
 		// 5. 급여로 조회
 		// method5(10000, 15000);
 		// 6. 입사일로 조회- String, Date
@@ -31,7 +37,32 @@ public class EmpController {
 	}
 
 	
-	
+	private static EmpVO makeEmp() {
+		EmpVO emp = new EmpVO();
+		emp.setCommission_pct(0.5);
+		emp.setDepartment_id(10);
+		emp.setEmail("email");
+		emp.setEmployee_id(88);
+		emp.setFirst_name("채연");
+		emp.setHire_date(new Date(2000, 01, 01));
+		emp.setJob_id("IT_PROG");
+		emp.setLast_name("김");
+		emp.setManager_id(100);
+		emp.setPhone_number("010-7777-6666");
+		emp.setSalary(1000);
+		return emp;
+	}
+
+	private static void method10() {
+		EmpDAO dao = new EmpDAO();
+		EmpVO emp = makeEmp();
+		
+		int reusult = dao.insertEmp(emp);
+		EmpView.display(reusult>0?"입력성공":"입력실패");
+	}
+
+
+
 
 	private static void method9(int dept, String job, int sal, String dt) {
 		EmpDAO dao = new EmpDAO();

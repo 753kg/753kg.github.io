@@ -14,6 +14,51 @@ import util.DBUtil;
 // DAO(Data Access Object) : DB에 가서 작업해야하는 비즈니스 로직
 public class EmpDAO {
 	
+	// CRUD(Create, Read, Update, Delete)
+	//		:insert, :select
+	
+	// 사용자가 웹을 통해서 회원가입 : controller -> service -> dao -> DB
+	public int insertEmp(EmpVO emp) {
+		String sql = "insert into employees values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		Connection conn;
+		PreparedStatement st = null;
+		// ResultSet -> select할때만 필요
+		
+		int result = 0;
+		
+		conn = DBUtil.getConnection();
+		try {
+			conn.setAutoCommit(false);			//auto Commit 안하기=> 한번에 여러 sql문을 실행하고자 할때
+			st = conn.prepareStatement(sql);
+			st.setInt(1, emp.getEmployee_id());
+			st.setString(2, emp.getFirst_name());
+			st.setString(3, emp.getLast_name());
+			st.setString(4, emp.getEmail());
+			st.setString(5, emp.getPhone_number());
+			st.setDate(6, emp.getHire_date());
+			st.setString(7, emp.getJob_id());
+			st.setInt(8, emp.getSalary());
+			st.setDouble(9, emp.getCommission_pct());
+			st.setInt(10, emp.getManager_id());
+			st.setInt(11, emp.getDepartment_id());
+			
+			result = st.executeUpdate();	// sql 문장을 DB에 반영
+			conn.commit();					// auto Commit 안하고 그냥 커밋;	
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		
+		return result;		// insert 건수 return
+	}
+	
 	// 1. 모든 직원 조회
 	public List<EmpVO> selectAll() {
 		List<EmpVO> emplist = new ArrayList<>();
