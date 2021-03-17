@@ -1,9 +1,10 @@
 --------수업--------
--- ppt 9장 DDL(데이터 정의어), 10장 DML
--- number : 자동으로 38글자
--- varchar2(20) : 한글이면 6자까지
+-- ppt 9장 DDL(데이터 정의어) : create, alter, drop, truncate, rename 
+--10장 DML
 drop table customer;
 
+-- number : 자동으로 38글자
+-- varchar2(20) : 한글이면 6자까지
 create table customer(
     cust_id number,
     cust_name varchar2(20),
@@ -13,6 +14,9 @@ create table customer(
     year01 interval year(3) to month, 
     day01 interval day(3) to second
 );
+
+select interval '3' year(3)
+from dual;
                                                             -- 3년
 insert into customer values(1, '홍길동', 'M', '남자', sysdate, interval '36' month(3), interval '100' day(3) );
 insert into customer values(2, '홍길동2', 'F','여자',  sysdate, interval '36' month(3), interval '100' day(3) );
@@ -41,6 +45,8 @@ from customer;
 
 --===================================================
 -- number(9, 2) : 전체 9자리, 소수 밑 2자리
+drop table emp2;
+
 create table emp2(
     empid number(3),
     empname varchar2(20),
@@ -90,7 +96,9 @@ select * from emp6;
 
 --==============================================
 -- 컬럼 추가하기
--- sql plus ==> desc emp6; ==> 확인
+
+desc emp6;
+
 alter table emp6
 add ( deptid number, address varchar2(100) );
 
@@ -103,11 +111,14 @@ modify ( deptid number(3), address varchar2(50) );
 
 -- 컬럼 삭제
 alter table emp6
-drop ( deptid );
+drop column deptid;
 
 -- 컬럼 다시 추가
 alter table emp6
 add ( dept_id number(3) );
+
+alter table emp6
+drop ( dept_id );
 
 -- 테이블 삭제.. 복구 불가
 drop table emp6;
@@ -130,10 +141,15 @@ desc tbl_emp4;
 --===========================================
 --USER_TABLES 데이터 딕셔너리 뷰 살피기
 -- hr 계정에 있는 테이블들 
+desc user_tables;
+show user;
+
 select *
 from user_tables;
 
 -- 모든 계정에 있는 테이블
+desc all_tables;
+
 select *
 from all_tables;
 
@@ -171,6 +187,8 @@ where gender is null;
 
 --================================================================
 -- create table문의 subquery 
+drop table emp_backup;
+
 create table emp_backup
 as
 select employee_id, first_name, salary, hire_date
@@ -193,6 +211,9 @@ from departments;
 
 --===============================================
 -- 다중 테이블에 다중 행 입력 ==> insert all
+drop table emp_basic;
+drop table emp_addinfo;
+
 create table emp_basic
 as
 select employee_id, first_name, salary
@@ -225,6 +246,45 @@ select employee_id, first_name, salary, hire_date
 from employees;
 
 --================================================
+-- pivoting에 의해 다중 테이블에 다중행 입력하기
+
+-- 월~금까지 매일매일의 판매실적 기록하는 테이블
+create table sales(
+    sales_id number(4),
+    week_id number(4),
+    mon_sales number(8, 2),
+    tue_sales number(8, 2),
+    wed_sales number(8, 2),
+    thu_sales number(8, 2),
+    fri_sales number(8, 2)
+);
+
+insert into sales values(1001, 1, 200, 100, 300, 400, 500);
+insert into sales values(1002, 2, 100, 300, 200, 500, 350);
+
+-- pivoting insert문 결과를 저장할 테이블
+create table sales_data(
+    sales_id number(4),
+    week_id number(4),
+    daily_id number(4),
+    sales number(8,2)
+);
+
+select * from sales;
+
+-- 요일을 구분할 수 있는 컬럼을 추가하여 매일 매일의 판매 실적 기록
+insert all
+into sales_data values(sales_id, week_id, 1, mon_sales)
+into sales_data values(sales_id, week_id, 2, tue_sales)
+into sales_data values(sales_id, week_id, 3, wed_sales)
+into sales_data values(sales_id, week_id, 4, thu_sales)
+into sales_data values(sales_id, week_id, 5, fri_sales)
+select sales_id, week_id, mon_sales, tue_sales, wed_sales, thu_sales, fri_sales
+from sales;
+
+select * from sales_data;
+
+--================================================
 select * from emp_basic;
 
 update emp_basic
@@ -250,20 +310,21 @@ set salary = (select salary
 where first_name = 'Luis';
 
 
--- Luis의 급여는 Jennifer의 급여와 같다
+-- Luis의 급여와 입사날짜는 Nancy와 같다
 update emp_backup
 set (salary, hire_date) = (select salary, hire_date
                         from emp_backup
                         where first_name = 'Nancy')
-where first_name = 'IT support';
+where first_name = 'Luis';
 
 commit;
 
+-- delete : 테이블에 저장되어있는 데이터를 삭제
 delete from emp_backup;
 select * from emp_backup;
 
 drop table emp_backup;
-select emp_backup;
+--select emp_backup;
 insert into emp_backup
 select employee_id, first_name, salary, hire_date
 from employees;
@@ -283,6 +344,9 @@ where department_id = ( select department_id
                         
 --===========================================================
 --테이블을 합병하는 MERGE
+drop table emp01;
+drop table emp02;
+
 create table emp01
 as
 select employee_id, first_name, salary, hire_date 
@@ -304,6 +368,7 @@ insert into emp02 values(99, '김채연', 1000, sysdate);
 -- emp01 : 107건
 -- emp02 : 5건 + 1건
 
+-- emp01 테이블에 emp02테이블을 합병
 merge into emp01 using emp02
 on(EMP01.EMPLOYEE_ID = emp02.employee_id)
 when matched then
@@ -331,7 +396,7 @@ delete from emp02 where employee_id = 104;
 delete from emp02 where employee_id = 105;
 --> 다른 세션에서는 지워지지 않음
 -- commit 해야 다른 세션에서도 지워짐
--- rollback : 원상복귀
+-- rollback : 원상복귀, 변경사항 취소
 rollback;
 -- 작업 끝 -- > 하나의 트랜잭션
 
@@ -370,13 +435,15 @@ select * from departments;
 desc user_constraints;
 
 -- 현재 계정의 제약조건 확인
+-- constraint_name, constraint_type, search_condition, r_constraint_name
 select * from user_constraints
 where table_name = 'EMPLOYEES';
 
+-- constraint_name, column_name
 select * from user_cons_columns
 where table_name = 'EMPLOYEES';
 
-select column_name, constraint_type, search_condition
+select column_name, constraint_type, search_condition, r_constraint_name
 from user_cons_columns join user_constraints using(constraint_name)
 where user_cons_columns.table_name = 'EMPLOYEES';
 -- P(Primary key, 기본키) :  유일값, null불가, 필수컬럼, 테이블에 딱 하나만 있어야 한다.
@@ -388,7 +455,7 @@ where user_cons_columns.table_name = 'EMPLOYEES';
 -- 특정 컬럼이 어떤 컬럼을 참조하고있는지
 select aa.constraint_name, aa.table_name, aa.constraint_type , bb.table_name
 from  user_constraints aa, user_constraints bb
-where aa.constraint_name  = bb.r_constraint_name
+where aa.constraint_name  = bb.r_constraint_name;
 
 
 --=====================================================================
@@ -397,7 +464,7 @@ where aa.constraint_name  = bb.r_constraint_name
 drop table customer;
 
 create table customer(
-    cust_id number constraint customer_cusst_id_pk primary key,
+    cust_id number constraint customer_cust_id_pk primary key,
     cust_name varchar2(30) not null,
     email varchar2(20) constraint customer_email_unique unique,
     address varchar2(100),
@@ -616,6 +683,20 @@ board_password   (게시물 암호) 문자 가변 자릿수 20자리,
 (Member  테이블
 member_id 문자 가변 자릿수 100자리
            primary key 라고 가정합니다)
+           
+create table member(
+    member_id varchar2(100) constraint member_id_pk primary key
+);
+           
+create table board(
+    board_seq number(10) constraint BOARD_SEQ_PK primary key,
+    board_title varchar2(255) not null,
+    board_contents varchar2(4000),
+    board_writer varchar2(100) constraint board_writer_fk references member(member_id),
+    board_date date,
+    board_viewcount number(6),
+    board_password varchar2(20)
+);
 
 
 ====================================
@@ -625,4 +706,6 @@ member_id 문자 가변 자릿수 100자리
 단, citycode_gt_2000 view는 변경 가능하도록 생성합니다.
 
 LOCATION_ID	  CITY	  COUNTRY_NAME	  DEPARTMENT_NAME
+
+ 
 
