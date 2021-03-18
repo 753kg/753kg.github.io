@@ -14,11 +14,17 @@ public class EmpController {
 
 	public static void main(String[] args) {
 		
+		//삭제
+		//method12();
+		
+		// 수정
+//		method11();
+		
 		// 입력 test
-		method10();
+//		method10();
 		
 		// 1. 모든직원조회
-		// method1();
+		 method1();
 		// 2. 기본키로 조회
 		// method2(101);
 		// 3. 부서번호로 조회
@@ -37,19 +43,34 @@ public class EmpController {
 	}
 
 	
+	private static void method12() {
+		EmpDAO dao = new EmpDAO();
+		int result = dao.deleteEmp(9);
+		EmpView.display(result>0?"삭제성공":"삭제실패");
+	}
+
+
+	private static void method11() {
+		EmpDAO dao = new EmpDAO();
+		EmpVO emp = makeEmp();
+		int result = dao.updateEmp(emp);
+		EmpView.display(result>0?"수정성공":"수정실패");
+	}
+
+
 	private static EmpVO makeEmp() {
 		EmpVO emp = new EmpVO();
-		emp.setCommission_pct(0.5);
+		emp.setCommission_pct(0.7);
 		emp.setDepartment_id(10);
-		emp.setEmail("email");
-		emp.setEmployee_id(88);
-		emp.setFirst_name("채연");
-		emp.setHire_date(new Date(2000, 01, 01));
+		emp.setEmail("email수정");
+		emp.setEmployee_id(135);
+		emp.setFirst_name("채연_수정");
+		emp.setHire_date(new Date(new java.util.Date().getTime()));
 		emp.setJob_id("IT_PROG");
-		emp.setLast_name("김");
+		emp.setLast_name("김_수정");
 		emp.setManager_id(100);
-		emp.setPhone_number("010-7777-6666");
-		emp.setSalary(1000);
+		emp.setPhone_number("010-8877-6666");
+		emp.setSalary(2000);
 		return emp;
 	}
 

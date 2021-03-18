@@ -17,7 +17,78 @@ public class EmpDAO {
 	// CRUD(Create, Read, Update, Delete)
 	//		:insert, :select
 	
-	// 사용자가 웹을 통해서 회원가입 : controller -> service -> dao -> DB
+	// 관리자가 웹을 통해서 
+	public int deleteEmp(int empid) {
+		int result = 0;
+		
+		String sql = 
+				" delete from employees" +
+				" where EMPLOYEE_ID = ?";
+		
+		Connection conn;
+		PreparedStatement st = null;
+		conn = DBUtil.getConnection();
+		try {
+			st = conn.prepareStatement(sql);
+			st.setInt(1, empid);
+			result = st.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		return result;
+	}
+	
+	// 사용자가 웹을 통해서 개인정보수정 -> 본래 정보가 보임 -> controller -> dao -> DB
+	public int updateEmp(EmpVO emp) {
+		int result = 0;
+		
+		String sql = 
+				" update employees set" +
+			    " FIRST_NAME = ?," +
+			    " LAST_NAME = ?," +
+			    " EMAIL = ?," +
+			    " PHONE_NUMBER = ?," +
+			    " HIRE_DATE = ?," +    
+			    " JOB_ID = ?," +
+			    " SALARY = ?," +
+			    " COMMISSION_PCT = ?," +
+			    " MANAGER_ID = ?," +
+			    " DEPARTMENT_ID = ?" +
+				" where EMPLOYEE_ID = ?";
+		
+		Connection conn;
+		PreparedStatement st = null;
+		conn = DBUtil.getConnection();
+		try {
+			st = conn.prepareStatement(sql);
+			st.setInt(11, emp.getEmployee_id());
+			st.setString(1, emp.getFirst_name());
+			st.setString(2, emp.getLast_name());
+			st.setString(3, emp.getEmail());
+			st.setString(4, emp.getPhone_number());
+			st.setDate(5, emp.getHire_date());
+			st.setString(6, emp.getJob_id());
+			st.setInt(7, emp.getSalary());
+			st.setDouble(8, emp.getCommission_pct());
+			st.setInt(9, emp.getManager_id());
+			st.setInt(10, emp.getDepartment_id());
+			
+			result = st.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		
+		
+		return result;	// 수정된 건수를 리턴
+	}
+	
+	// 사용자가 웹을 통해서 회원가입 -> controller -> service -> dao -> DB
 	public int insertEmp(EmpVO emp) {
 		String sql = "insert into employees values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		Connection conn;
