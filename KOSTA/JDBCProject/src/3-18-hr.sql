@@ -664,7 +664,8 @@ SQL> select * from pubTBL;
 drop table member;
 
 create table member(
-    member_id number(3) constraint member_id_pk primary key
+    member_id number(3) constraint member_id_pk primary key,
+    member_name varchar(20)
 );
 
 drop table board;
@@ -686,11 +687,26 @@ drop sequence board_no_sequence;
 
 create sequence board_no_sequence;
 
-insert into member values(1);
+insert into member values(101, '짱구');
+insert into member values(102, '철수');
+insert into member values(103, '유리');
+insert into member values(104, '훈이');
+insert into member values(105, '맹구');
     
-insert into board values(board_no_sequence.nextval, 'title1', '첫번째게시물', 1, sysdate, 0, '비밀번호1234', 'images/logo.png');
+insert into board values(board_no_sequence.nextval, '짱구예요', '안녕하세요', 101, sysdate, 0, '짱구12', 'images/logo1.png');
+insert into board values(board_no_sequence.nextval, '철수예요', '안녕하세요', 102, sysdate, 0, '철수12', 'images/logo2.png');
+insert into board values(board_no_sequence.nextval, '짱짱', '우와', 101, sysdate, 0, '짱구12', 'images/logo11.png');
+insert into board values(board_no_sequence.nextval, '철철', '에잇', 102, sysdate, 0, '철수12', 'images/logo22.png');
 
 select * from board;
+
+delete from board
+where board_seq = 4 and BOARD_PASSWORD = '짱구12';
+
+delete from board
+where board_seq = 5 and BOARD_PASSWORD = '짱구12';
+
+commit;
 
 update board
 set board_viewcount = board_viewcount + 1

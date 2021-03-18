@@ -69,7 +69,7 @@ public class BoardDAO {
 	
 	public int insertBoard(BoardVO board) {
 		
-		String sql = "insert into board values(?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into board values(board_no_sequence.nextval, ?, ?, ?, ?, ?, ?, ?)";
 		
 		Connection conn = DBUtil.getConnection();
 		PreparedStatement st = null;
@@ -77,14 +77,14 @@ public class BoardDAO {
 		
 		try {
 			st = conn.prepareStatement(sql);
-			st.setInt(1, board.getBoard_seq());
-			st.setString(2, board.getBoard_title());
-			st.setString(3, board.getBoard_contents());
-			st.setInt(4, board.getBoard_writer());
-			st.setDate(5, board.getBoard_date());
-			st.setInt(6, board.getBoard_viewcount());
-			st.setString(7, board.getBoard_password());
-			st.setString(8, board.getBoard_image());
+			//st.setInt(1, board.getBoard_seq());
+			st.setString(1, board.getBoard_title());
+			st.setString(2, board.getBoard_contents());
+			st.setInt(3, board.getBoard_writer());
+			st.setDate(4, board.getBoard_date());
+			st.setInt(5, board.getBoard_viewcount());
+			st.setString(6, board.getBoard_password());
+			st.setString(7, board.getBoard_image());
 			result = st.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -128,9 +128,11 @@ public class BoardDAO {
 	}
 	
 	// board delete
-	public int deleteBoard(int board_seq) {
+	public int deleteBoard(int board_seq, String board_password) {
 		
-		String sql = "delete from board where board_seq = ?";
+		String sql = 
+				" delete from board" +
+				" where board_seq = ? and BOARD_PASSWORD = ?";
 		
 		Connection conn = DBUtil.getConnection();
 		PreparedStatement st = null;
@@ -139,6 +141,7 @@ public class BoardDAO {
 		try {
 			st = conn.prepareStatement(sql);
 			st.setInt(1, board_seq);
+			st.setString(2, board_password);
 			result = st.executeUpdate();
 			
 		} catch (SQLException e) {
