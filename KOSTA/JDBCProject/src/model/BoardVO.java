@@ -6,7 +6,7 @@ public class BoardVO {
 	private int board_seq;    
 	private String board_title; 
 	private String board_contents;
-	private int board_writer; 
+	private int board_writer; 			// Member table의 id를 참조
 	private Date board_date;        
 	private int board_viewcount;     
 	private String board_password;  
@@ -21,7 +21,7 @@ public class BoardVO {
 		this.board_seq = board_seq;
 		this.board_title = board_title;
 	}
-
+	
 	public BoardVO(int board_seq, String board_title, String board_contents, int board_writer, Date board_date,
 			int board_viewcount, String board_password, String board_image) {
 		super();

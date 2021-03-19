@@ -16,7 +16,7 @@ public class BoardDAO {
 	public List<BoardVO> selectAll() {
 		List<BoardVO> boardlist = new ArrayList<>();
 		
-		String sql = "select * from board";
+		String sql = "select * from board order by 1";
 		Connection conn = DBUtil.getConnection();
 		Statement st = null;
 		ResultSet rs = null;
@@ -39,15 +39,22 @@ public class BoardDAO {
 		return boardlist;
 	}
 	
-	public BoardVO selectById(int board_seq) {
+	public BoardVO selectByNo(int board_seq) {
 		BoardVO board = null;
 		
 		String sql = "select * from board where board_seq = ?";
+		// String sql2 = "update board set board_viewcount = board_viewcount + 1 where board_seq = ?";
+		String sql2 = "update board set board_viewcount = nvl(board_viewcount, 0) + 1 where board_seq = ?";
 		Connection conn = DBUtil.getConnection();
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		
 		try {
+			//updateViewCount(board_seq);
+			st = conn.prepareStatement(sql2);
+			st.setInt(1, board_seq);
+			st.executeUpdate();
+			
 			st = conn.prepareStatement(sql);
 			st.setInt(1, board_seq);
 			rs = st.executeQuery();
@@ -56,7 +63,6 @@ public class BoardDAO {
 				board = makeBoard(rs);
 			}
 			
-			updateViewCount(board_seq);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,23 +74,21 @@ public class BoardDAO {
 	}
 	
 	public int insertBoard(BoardVO board) {
-		
-		String sql = "insert into board values(board_no_sequence.nextval, ?, ?, ?, ?, ?, ?, ?)";
+		int result = 0;
+		String sql = "insert into board values(board_no_sequence.nextval, ?, ?, ?, sysdate, 0, ?, ?)";
 		
 		Connection conn = DBUtil.getConnection();
 		PreparedStatement st = null;
-		int result = 0;
 		
 		try {
 			st = conn.prepareStatement(sql);
-			//st.setInt(1, board.getBoard_seq());
 			st.setString(1, board.getBoard_title());
 			st.setString(2, board.getBoard_contents());
 			st.setInt(3, board.getBoard_writer());
-			st.setDate(4, board.getBoard_date());
-			st.setInt(5, board.getBoard_viewcount());
-			st.setString(6, board.getBoard_password());
-			st.setString(7, board.getBoard_image());
+			//st.setDate(4, board.getBoard_date());
+			//st.setInt(4, board.getBoard_viewcount());
+			st.setString(4, board.getBoard_password());
+			st.setString(5, board.getBoard_image());
 			result = st.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -98,25 +102,25 @@ public class BoardDAO {
 	}
 	
 	// board update
-	public int updateBoard(BoardVO board) {
-		
-		return 0;
-	}
-	
-	public void updateViewCount(int board_seq) {
+	public int updateBoard(int board_seq, String board_password, 
+			String board_title, String board_contents, String board_image) {
+		int result = 0;
 		String sql = 
 				" update board" +
-				" set board_viewcount = board_viewcount + 1" +
-				" where board_seq = ?";
+				" set board_title = ?, board_contents = ?, board_image = ?, board_date = sysdate" +
+				" where board_seq = ? and board_password = ?";
 		
 		Connection conn = DBUtil.getConnection();
 		PreparedStatement st = null;
 		
 		try {
 			st = conn.prepareStatement(sql);
-			st.setInt(1, board_seq);
-			st.executeUpdate();
-			
+			st.setString(1, board_title);
+			st.setString(2, board_contents);
+			st.setString(3, board_image);
+			st.setInt(4, board_seq);
+			st.setString(5, board_password);
+			result = st.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,8 +128,32 @@ public class BoardDAO {
 			DBUtil.dbClose(null, st, conn);
 		}
 		
-		
+		return result;
 	}
+	
+//	public void updateViewCount(int board_seq) {
+//		String sql = 
+//				" update board" +
+//				" set board_viewcount = board_viewcount + 1" +
+//				" where board_seq = ?";
+//		
+//		Connection conn = DBUtil.getConnection();
+//		PreparedStatement st = null;
+//		
+//		try {
+//			st = conn.prepareStatement(sql);
+//			st.setInt(1, board_seq);
+//			st.executeUpdate();
+//			
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} finally {
+//			DBUtil.dbClose(null, st, conn);
+//		}
+//		
+//		
+//	}
 	
 	// board delete
 	public int deleteBoard(int board_seq, String board_password) {
@@ -138,7 +166,11 @@ public class BoardDAO {
 		PreparedStatement st = null;
 		int result = 0;
 		
+		// 비밀번호 같은지 확인
+		// BoardVO board = selectByNo(board_seq);
+		
 		try {
+			// if(!board.getBoard_password().equals(board_password)) throw new SQLException("[알림]비밀번호 오류");
 			st = conn.prepareStatement(sql);
 			st.setInt(1, board_seq);
 			st.setString(2, board_password);
@@ -156,6 +188,7 @@ public class BoardDAO {
 	// board id로 select... view count 증가해야함... update set
 
 	private BoardVO makeBoard(ResultSet rs) throws SQLException {
+		// ResultSset에서 읽어서 VO 객체를 만든다.
 		BoardVO board = new BoardVO();
 		board.setBoard_seq(rs.getInt("board_seq"));
 		board.setBoard_title(rs.getString("board_title"));

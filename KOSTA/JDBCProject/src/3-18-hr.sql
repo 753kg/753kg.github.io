@@ -683,6 +683,10 @@ create table board(
 
 desc board;
 
+-- 제약조건 지우기
+alter table board
+drop constraints board_viewcount_ck;
+
 drop sequence board_no_sequence;
 
 create sequence board_no_sequence;
@@ -712,3 +716,18 @@ update board
 set board_viewcount = board_viewcount + 1
 where board_seq = 4;
 
+update board
+set board_title = ?,
+board_contents = ?,
+board_image = ?,
+board_date = sysdate
+where board_seq = ?
+and board_password = ?
+
+update board
+set board_title = '(수정)철철',
+board_contents = '수정했습니다',
+board_image = 'images/logo222.png',
+board_date = sysdate
+where board_seq = 5
+and board_password = '철수12';
