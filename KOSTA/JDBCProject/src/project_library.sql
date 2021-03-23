@@ -1,9 +1,18 @@
+drop table members;
+drop table books;
+drop table borrows;
+
+drop sequence borrows_code_seq;
+drop sequence books_children_seq;
+drop sequence books_essay_seq;
+drop sequence books_novel_seq;
+
 create table members(
     m_id varchar2(30) constraint members_id_PK primary key,
     m_pass varchar2(30) not null,
     m_name varchar2(20) not null,
     birth date,
-    phone varchar2(11),
+    phone varchar2(15),
     borr_count number(1) default 0
 );
 
@@ -28,6 +37,7 @@ create table borrows(
     borr_status varchar2(12)
 );
 
+-- ==============================================================
 create sequence borrows_code_seq
     start with 1000;
 
@@ -39,7 +49,7 @@ create sequence books_essay_seq
 
 create sequence books_novel_seq
     start with 300;
-
+-- ==============================================================
 insert into books(b_code, b_name, author, pub, pub_date, cover, category) 
 values(books_novel_seq.nextval, '달러구트 꿈 백화점', '이미예', '팩토리나인', '20/07/08', 'covers/lmyd.png', '소설');
 insert into books(b_code, b_name, author, pub, pub_date, cover, category) 
@@ -89,51 +99,128 @@ values(books_children_seq.nextval, '만복이네 떡집', '김리리', '비룡�
 insert into books(b_code, b_name, author, pub, pub_date, cover, category) 
 values(books_children_seq.nextval, '장군이네 떡집', '김리리', '비룡소', '20/04/29', 'covers/krrj.png', '어린이');
 
+-- ==============================================================
+-- 대출중인 도서 view
+create or replace view borrowing_view
+as
+select * from borrows where borr_status = '대출중';
 
+select * from borrowing_view;
+-- ==============================================================
 -- 회원가입
 insert into members(m_id, m_pass, m_name, birth, phone)
 values('hun2', '훈이12', '훈이', '15/03/02', '010-3333-2222');
 
+-- ==============================================================
 -- 도서명으로 검색
 select b_code, b_name, author, pub, pub_date, 
-    nvl(cover, '이미지없음'), b_status,
-    decode(return_date, null, '-', return_date) 반납예정일
-from books left outer join borrows using(b_code)
+    nvl(cover, '이미지없음') cover, b_status,
+    decode(return_date, null, '-', return_date) return_date
+from books left outer join borrowing_view using(b_code)
 where b_name like '%달러구트%';
-
-where b_name like '%'||?||'%';
 
 -- 작가명으로 검색
 select b_code, b_name, author, pub, pub_date, 
-    nvl(cover, '이미지없음'), b_status,
-    decode(return_date, null, '-', return_date) 반납예정일
-from books left outer join borrows using(b_code)
+    nvl(cover, '이미지없음') cover, b_status,
+    decode(return_date, null, '-', return_date) return_date
+from books left outer join borrowing_view using(b_code)
 where author like '%세랑%';
-
-where author like '%'||?||'%';
 
 -- 전체 도서 조회
 select b_code, b_name, author, pub, pub_date, 
-    nvl(cover, '이미지없음'), b_status,
-    decode(return_date, null, '-', return_date) 반납예정일
-from books left outer join borrows using(b_code);
+    nvl(cover, '이미지없음') cover, b_status,
+    decode(return_date, null, '-', return_date) return_date
+from books left outer join borrowing_view using(b_code);
 
 -- 카테고리별 조회
--- 소설
 select b_code, b_name, author, pub, pub_date, 
-    nvl(cover, '이미지없음'), b_status,
-    decode(return_date, null, '-', return_date) 반납예정일
-from books left outer join borrows using(b_code)
+    nvl(cover, '이미지없음') cover, b_status,
+    decode(return_date, null, '-', return_date) return_date
+from books left outer join borrowing_view using(b_code)
 where category = '소설';
--- 에세이
-select b_code, b_name, author, pub, pub_date, 
-    nvl(cover, '이미지없음'), b_status,
-    decode(return_date, null, '-', return_date) 반납예정일
-from books left outer join borrows using(b_code)
-where category = '에세이';
--- 어린이
-select b_code, b_name, author, pub, pub_date, 
-    nvl(cover, '이미지없음'), b_status,
-    decode(return_date, null, '-', return_date) 반납예정일
-from books left outer join borrows using(b_code)
-where category = '어린이';
+
+-- ==============================================================
+
+-- 도서 대출
+create or replace procedure borrow(bookCode in number, memberID in varchar2, result out number)
+is
+    bookStatus books.b_status%type;
+    borrCount members.borr_count%type;
+begin
+    select b_status 
+    into bookStatus
+    from books 
+    where b_code = bookCode;
+    
+    select borr_count
+    into borrCount
+    from members
+    where m_id = memberID;
+    
+    if(bookStatus = '대출가능' and borrCount < 2) then
+        insert into borrows(borr_code, b_code, m_id, borr_status)
+        values(borrows_code_seq.nextval, bookCode, memberID, '대출중');
+        result := 1;
+    else result := 0;
+    end if;
+    
+end;
+/
+execute borrow(305, 'hun2');
+
+-- 반납
+update borrows
+set borr_status = '반납', return_date = sysdate
+where borr_code = 1002 and m_id = 'hun2' and borr_status = '대출중';
+
+-- ==============================================================
+
+-- 대출 시 트리거
+create or replace trigger trigger_borrow
+after insert on borrows
+for each row
+begin
+    update books
+    set b_status = '대출중'
+    where b_code = :NEW.b_code;
+    
+    update members
+    set borr_count = borr_count + 1
+    where m_id = :NEW.m_id;
+end;
+/
+
+-- 반납 시 트리거
+create or replace trigger trigger_return
+after update on borrows
+for each row
+begin
+    update books
+    set b_status = '대출가능'
+    where b_code = :NEW.b_code;
+    
+    update members
+    set borr_count = decode(borr_count, 0, 0, borr_count - 1)
+    where m_id = :NEW.m_id;
+end;
+/
+
+-- ==============================================================
+
+-- 특정 멤버가 대출중인 도서 조회
+select borr_code, b_name, author, borr_date, return_date, borr_status
+from borrowing_view join books using(b_code)
+where m_id = 'hun2';
+
+-- 특정 멤버의 모든 대출 이력 조회
+select borr_code, b_name, author, borr_date, return_date, borr_status
+from borrows join books using(b_code)
+where m_id = 'hun2'
+order by return_date desc;
+
+-- ==============================================================
+select * from members;
+select * from books;
+select * from borrows;
+
+commit;
