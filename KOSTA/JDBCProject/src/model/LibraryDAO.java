@@ -13,7 +13,7 @@ import util.DBUtil;
 
 public class LibraryDAO {
 	
-	public int signIn(MemberVO member) {
+	public int signUp(MemberVO member) {
 		int result = 0;
 		String sql = 
 				" insert into members(m_id, m_pass, m_name, birth, phone)" +
@@ -37,6 +37,26 @@ public class LibraryDAO {
 			DBUtil.dbClose(null, st, conn);
 		}
 		
+		return result;
+	}
+	
+	public int quitMembers(String userID) {
+		int result = 0;
+		String sql = "delete from members where m_id = ? and borr_count = 0";
+		
+		Connection conn = DBUtil.getConnection();
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement(sql);
+			st.setString(1, userID);
+			result = st.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
 		return result;
 	}
 	
@@ -310,6 +330,57 @@ public class LibraryDAO {
 			DBUtil.dbClose(rs, st, conn);
 		}
 		return borrlist;
+	}
+	
+	public int extendsDate(int borr_code, String m_id) {
+		int result = 0;
+		String sql = 
+				" update borrowing_view" +
+				" set return_date = return_date + 7" +
+				" where borr_code = ? and m_id = ?";
+		
+		Connection conn = DBUtil.getConnection();
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement(sql);
+			st.setInt(1, borr_code);
+			st.setString(2, m_id);
+			result = st.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		return result;
+	}
+	
+	
+	
+	public int updateMember(String pw, String phone, String m_id) {
+		int result = 0;
+		String sql = 
+				" update members" +
+				" set m_pass = ?, phone = ?" +
+				" where m_id = ?";
+		
+		Connection conn = DBUtil.getConnection();
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement(sql);
+			st.setString(1, pw);
+			st.setString(2, phone);
+			st.setString(3, m_id);
+			result = st.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		return result;
 	}
 	
 	private BorrowVO makeBorrVO(ResultSet rs) throws SQLException {

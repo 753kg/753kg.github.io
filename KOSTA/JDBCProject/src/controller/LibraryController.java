@@ -11,72 +11,39 @@ import model.MemberVO;
 import view.LibraryView;
 
 public class LibraryController {
+	
+	static String userID = null;
+	static String userPW = null;
 
 	public static void main(String[] args) {
 		
 		Scanner sc = new Scanner(System.in);
 		
-		String userID = null;
-		String userPW = null;
-		
 		while(true) {
-			System.out.println("LIBRARY PROGRAM =================================");
+			System.out.print("LIBRARY PROGRAM =========================");
+			if(isLogin(userID, userPW)) System.out.println(" " + userID + "님 로그인중");
+			else System.out.println("=============");
 			System.out.println("1.회원가입|2.로그인|3.도서 검색|4.대출/반납|5.마이페이지|6.종료");
-			System.out.println("=================================================");
+			System.out.println("======================================================");
 			System.out.print("작업을 선택하세요 >> ");
 			int work = sc.nextInt();
 			switch (work) {
 			case 1:
-				signIn(sc);
+				signUp(sc);
 				break;
 			case 2:
-				System.out.print("ID >> ");
-				userID = sc.next();
-				System.out.print("PW >> ");
-				userPW = sc.next();
-				LibraryDAO dao = new LibraryDAO();
-				int result =  dao.logIn(userID, userPW);
-				if(result == 0) {
-					userID = null; userPW = null;
-					LibraryView.print("로그인에 실패하였습니다.");
-				} else LibraryView.print("로그인 되었습니다.");
+				logIn(sc);
 				break;
 			case 3:
 				searchBook(sc);
 				break;
 			case 4:
-				if(!isLogin(userID, userPW)) break;
-				System.out.println("1. 대출 | 2. 반납");
-				System.out.print("선택 >> ");
-				int num = sc.nextInt();
-				switch (num) {
-				case 1:
-					borrowBook(sc, userID);
-					break;
-				case 2:
-					returnBook(sc, userID);
-					break;
-				default:
-					break;
-				}
+				if(!isLogin(userID, userPW)) { LibraryView.print("로그인이 필요한 작업입니다."); break;}
+				borrowReturn(sc, userID);
 				break;
 			case 5:
-				if(!isLogin(userID, userPW)) break;
-				System.out.println("1. 개인정보수정 | 2. 대출조회/기간연장 | 3. 대출이력조회");
-				System.out.print("선택 >> ");
-				int num2 = sc.nextInt();
-				switch (num2) {
-				case 1:
-					break;
-				case 2:
-					selectBorrowing(userID);
-					break;
-				case 3:
-					selectBorrHistory(userID);
-					break;
-				default:
-					break;
-				}
+				if(!isLogin(userID, userPW)) { LibraryView.print("로그인이 필요한 작업입니다.");break;}
+				myPage(sc, userID);
 				break;
 			case 6:
 				LibraryView.print("프로그램이 종료되었습니다.");
@@ -89,6 +56,92 @@ public class LibraryController {
 		
 	}
 	
+	private static void borrowReturn(Scanner sc, String userID) {
+		System.out.println("1. 도서 대출 | 2. 도서 반납");
+		System.out.print("선택 >> ");
+		int num = sc.nextInt();
+		switch (num) {
+		case 1:
+			borrowBook(sc, userID);
+			break;
+		case 2:
+			returnBook(sc, userID);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private static void logIn(Scanner sc) {
+		System.out.print("ID >> ");
+		userID = sc.next();
+		System.out.print("PW >> ");
+		userPW = sc.next();
+		LibraryDAO dao = new LibraryDAO();
+		int result =  dao.logIn(userID, userPW);
+		if(result == 0) {
+			userID = null; userPW = null;
+			LibraryView.print("로그인에 실패하였습니다.");
+		} else LibraryView.print("로그인 되었습니다.");
+	}
+
+	private static void myPage(Scanner sc, String userID) {
+		System.out.println("1. 개인정보수정 | 2. 대출조회/기간연장 | 3. 대출이력조회 | 4. 로그아웃 | 5. 회원탈퇴");
+		System.out.print("선택 >> ");
+		int num2 = sc.nextInt();
+		aa : switch (num2) {
+		case 1:
+			updateMember(sc, userID);
+			break;
+		case 2:
+			selectBorrowing(userID);
+			System.out.println("1. 기간연장하기 | 2. 뒤로가기");
+			int num3 = sc.nextInt();
+			switch(num3) {
+			case 1:
+				extendsDate(sc, userID); break;
+			case 2: break aa;
+			}
+		case 3:
+			selectBorrHistory(userID);
+			break;
+		case 4:
+			userID = null; userPW = null;
+			LibraryView.print("로그아웃 되었습니다.");
+			break;
+		case 5:
+			quitMembers(userID);
+			break;
+		default:	
+			break;
+		}
+	}
+
+	private static void quitMembers(String userID) {
+		LibraryDAO dao = new LibraryDAO();
+		int result = dao.quitMembers(userID);
+		LibraryView.print(result>0 ? "회원 탈퇴가 완료되었습니다." : "탈퇴할 수 없습니다.");
+	}
+
+	private static void extendsDate(Scanner sc, String userID) {
+		// TODO Auto-generated method stub
+		System.out.println("기간연장할 책의 대출코드를 입력하세요>> ");
+		LibraryDAO dao = new LibraryDAO();
+		int result = dao.extendsDate(sc.nextInt(), userID);
+		LibraryView.print(result>0 ? "기간이 연장되었습니다." : "연장할 수 없습니다.");
+	}
+
+	private static void updateMember(Scanner sc, String userID) {
+		System.out.print("변경할 비밀번호 >> ");
+		String pw = sc.next();
+		System.out.print("변경할 전화번호 >> ");
+		String phone = sc.next();
+		LibraryDAO dao = new LibraryDAO();
+		int result = dao.updateMember(pw, phone, userID);
+		LibraryView.print(result>0 ? "변경이 완료되었습니다." : "변경할 수 없습니다.");
+		
+	}
+
 	private static void selectBorrHistory(String userID) {
 		LibraryDAO dao = new LibraryDAO();
 		List<BorrowVO> borrlist = dao.selectBorrHistory(userID);
@@ -111,10 +164,8 @@ public class LibraryController {
 	}
 
 	private static boolean isLogin(String user, String pass) {
-		if(user == null || pass ==  null) {
-			LibraryView.print("로그인이 필요한 작업입니다.");
+		if(user == null || pass ==  null) 
 			return false;
-		}
 		return true;
 	}
 	
@@ -123,10 +174,24 @@ public class LibraryController {
 		int b_code = sc.nextInt();
 		LibraryDAO dao = new LibraryDAO();
 		int result = dao.borrowBook(b_code, userID);
-		LibraryView.print(result>0 ? "대출이 완료되었습니다." : "대출할 수 없습니다.");
+		System.out.println(result);
+		switch (result) {
+		case 1:
+			LibraryView.print("XX대출실패XX : 이미 대출중인 도서입니다.");
+			break;
+		case 2:
+			LibraryView.print("XX대출실패XX : 최대 2권까지만 대출 가능합니다.");
+			break;
+		case 3:
+			LibraryView.print("대출이 완료되었습니다.");
+			break;
+		default:
+			LibraryView.print("XX대출실패XX : ERROR");
+			break;
+		}
 	}
 
-	private static void signIn(Scanner sc) {
+	private static void signUp(Scanner sc) {
 		MemberVO member = new MemberVO();
 		System.out.print("아이디 >> ");
 		member.setM_id(sc.next());
@@ -140,8 +205,11 @@ public class LibraryController {
 		member.setPhone(sc.next());
 		
 		LibraryDAO dao = new LibraryDAO();
-		int result =  dao.signIn(member);
+		int result =  dao.signUp(member);
 		LibraryView.print(result>0 ? "회원가입 되었습니다." : "회원가입에 실패하였습니다.");
+		
+		userID = member.getM_id();
+		userPW = member.getM_pass();
 	}
 	
 

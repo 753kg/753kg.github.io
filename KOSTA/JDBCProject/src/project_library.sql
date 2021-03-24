@@ -142,7 +142,7 @@ where category = '소설';
 -- ==============================================================
 
 -- 도서 대출
-create or replace procedure borrow(bookCode in number, memberID in varchar2, result out number)
+create or replace procedure borrow(bookCode in number, memberID in varchar2, resultNum out number)
 is
     bookStatus books.b_status%type;
     borrCount members.borr_count%type;
@@ -157,11 +157,13 @@ begin
     from members
     where m_id = memberID;
     
-    if(bookStatus = '대출가능' and borrCount < 2) then
+    if(bookStatus = '대출중') then resultNum := 1;
+    elsif(borrCount >= 2) then resultNum := 2;
+    elsif(bookStatus = '대출가능' and borrCount < 2) then
         insert into borrows(borr_code, b_code, m_id, borr_status)
         values(borrows_code_seq.nextval, bookCode, memberID, '대출중');
-        result := 1;
-    else result := 0;
+        resultNum := 3;
+    else resultNum := 0;
     end if;
     
 end;
@@ -205,8 +207,14 @@ begin
 end;
 /
 
--- ==============================================================
+-- ==================== 마이페이지 ==========================================
+-- 개인정보 수정
+update members
+set m_pass = '훈이비번바꿈', phone = '010-3232-3232'
+where m_id = 'hun2';
 
+select * from members;
+commit;
 -- 특정 멤버가 대출중인 도서 조회
 select borr_code, b_name, author, borr_date, return_date, borr_status
 from borrowing_view join books using(b_code)
@@ -218,6 +226,19 @@ from borrows join books using(b_code)
 where m_id = 'hun2'
 order by return_date desc;
 
+-- 기간 연장
+update borrowing_view
+set return_date = return_date + 7
+where borr_code = 1007 and m_id = 'jj9';
+select * from borrowing_view;
+select * from borrows;
+commit;
+
+-- 회원 탈퇴
+create or replace procedure singoutmember;
+
+delete from members
+where m_id = 'hun2' and borr_count = 0;
 -- ==============================================================
 select * from members;
 select * from books;

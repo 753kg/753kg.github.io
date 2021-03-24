@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import util.DBUtil;
+import util.LoggableStatement;
 
 public class BoardDAO {
 	// board insert
@@ -51,14 +52,17 @@ public class BoardDAO {
 		
 		try {
 			//updateViewCount(board_seq);
-			st = conn.prepareStatement(sql2);
+			st = new LoggableStatement(conn, sql2);
+			//st = conn.prepareStatement(sql2);
 			st.setInt(1, board_seq);
 			st.executeUpdate();
 			
-			st = conn.prepareStatement(sql);
+			st = new LoggableStatement(conn, sql);
+			//st = conn.prepareStatement(sql);
 			st.setInt(1, board_seq);
 			rs = st.executeQuery();
-			
+
+			System.out.println("SQL문 확인:" + ((LoggableStatement) st).getQueryString());
 			while(rs.next()) {
 				board = makeBoard(rs);
 			}
@@ -115,11 +119,13 @@ public class BoardDAO {
 		
 		try {
 			st = conn.prepareStatement(sql);
+			
 			st.setString(1, board_title);
 			st.setString(2, board_contents);
 			st.setString(3, board_image);
 			st.setInt(4, board_seq);
 			st.setString(5, board_password);
+
 			result = st.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
