@@ -29,8 +29,6 @@ public class LibraryView {
 	
 	
 	public static void print(String message) {
-		System.out.println("-------- 알림 -------");
-		System.out.println(message);
-		System.out.println("-------------------");
+		System.out.println("[알림]" + message);
 	}
 }

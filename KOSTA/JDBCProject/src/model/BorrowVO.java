@@ -5,6 +5,7 @@ import java.sql.Date;
 public class BorrowVO {
 	// 대출코드, 책 이름, 작가, 빌린날짜, 반납날짜, 대출상태
 	int borr_code;
+	int b_code;
 	String b_name;
 	String author;
 	Date borr_date;
@@ -15,14 +16,23 @@ public class BorrowVO {
 		
 	}
 
-	public BorrowVO(int borr_code, String b_name, String author, Date borr_date, Date return_date, String borr_status) {
+	public BorrowVO(int borr_code, int b_code, String b_name, String author, Date borr_date, Date return_date, String borr_status) {
 		super();
 		this.borr_code = borr_code;
+		this.b_code = b_code;
 		this.b_name = b_name;
 		this.author = author;
 		this.borr_date = borr_date;
 		this.return_date = return_date;
 		this.borr_status = borr_status;
+	}
+
+	public int getB_code() {
+		return b_code;
+	}
+
+	public void setB_code(int b_code) {
+		this.b_code = b_code;
 	}
 
 	public int getBorr_code() {
@@ -75,9 +85,10 @@ public class BorrowVO {
 
 	@Override
 	public String toString() {
-		return "BorrowVO [borr_code=" + borr_code + ", b_name=" + b_name + ", author=" + author + ", borr_date="
-				+ borr_date + ", return_date=" + return_date + ", borr_status=" + borr_status + "]";
+		return "BorrowVO [borr_code=" + borr_code + ", b_code=" + b_code + ", b_name=" + b_name + ", author=" + author
+				+ ", borr_date=" + borr_date + ", return_date=" + return_date + ", borr_status=" + borr_status + "]";
 	}
+
 	
 	
 }

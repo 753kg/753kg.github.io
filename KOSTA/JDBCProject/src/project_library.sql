@@ -30,8 +30,8 @@ create table books(
 
 create table borrows(
     borr_code number(4) constraint borrows_code_PK primary key,
-    b_code constraint borrows_book_code_FK references books(b_code),
-    m_id constraint borrows_member_id_FK references members(m_id),
+    b_code constraint borrows_book_code_FK references books(b_code) ON DELETE CASCADE,
+    m_id constraint borrows_member_id_FK references members(m_id) ON DELETE CASCADE,
     borr_date date default sysdate,
     return_date date default sysdate + 14,
     borr_status varchar2(12)
@@ -112,36 +112,71 @@ insert into members(m_id, m_pass, m_name, birth, phone)
 values('hun2', '훈이12', '훈이', '15/03/02', '010-3333-2222');
 
 -- ==============================================================
--- 도서명으로 검색
+-- join view
+create or replace view search_books_view
+as
 select b_code, b_name, author, pub, pub_date, 
-    nvl(cover, '이미지없음') cover, b_status,
-    decode(return_date, null, '-', return_date) return_date
-from books left outer join borrowing_view using(b_code)
-where b_name like '%달러구트%';
-
--- 작가명으로 검색
-select b_code, b_name, author, pub, pub_date, 
-    nvl(cover, '이미지없음') cover, b_status,
-    decode(return_date, null, '-', return_date) return_date
-from books left outer join borrowing_view using(b_code)
-where author like '%세랑%';
-
--- 전체 도서 조회
-select b_code, b_name, author, pub, pub_date, 
-    nvl(cover, '이미지없음') cover, b_status,
+    nvl(cover, '이미지없음') cover, category, b_status,
     decode(return_date, null, '-', return_date) return_date
 from books left outer join borrowing_view using(b_code);
 
+-- 전체도서
+select b_code, b_name, author, pub, pub_date, cover, b_status, return_date
+from search_books_view;
+
+-- 도서명으로 검색
+select b_code, b_name, author, pub, pub_date, cover, b_status, return_date
+from search_books_view
+where b_name like '%달러구트%';
+
+-- 작가명으로 검색
+select b_code, b_name, author, pub, pub_date, cover, b_status, return_date
+from search_books_view
+where author like '%세랑%';
+
 -- 카테고리별 조회
-select b_code, b_name, author, pub, pub_date, 
-    nvl(cover, '이미지없음') cover, b_status,
-    decode(return_date, null, '-', return_date) return_date
-from books left outer join borrowing_view using(b_code)
+select b_code, b_name, author, pub, pub_date, cover, b_status, return_date
+from search_books_view
 where category = '소설';
 
 -- ==============================================================
 
 -- 도서 대출
+create or replace procedure borrow(bcode in number, mid in varchar2, message out number)
+is
+	exists_borr char(1);
+	borrCount members.borr_count%type;
+begin
+	-- 해당 책이 대출가능한 상태인지 확인
+	select
+	case when exists(select * from books where b_code = bcode and b_status = '대출가능') then '1'
+	else '0' end
+	into exists_borr
+	from dual;
+    -- 해당 멤버의 도서 대출 권수를 저장
+	select borr_count into borrCount from members where m_id = mid;
+
+	-- 대출중이면
+	if(exists_borr = '0') then message := 1;
+	-- 대출권수가 2권 이상이면
+	elsif(borrCount >= 2) then message := 2;
+	else
+		insert into borrows(borr_code, b_code, m_id, borr_status)
+		values(borrows_code_seq.nextval, bcode, mid, '대출중');
+        
+        update books
+        set b_status = '대출중'
+        where b_code = bcode;
+    
+        update members
+        set borr_count = borr_count + 1
+        where m_id = mid;
+		
+        message := 3;
+	end if;
+end;
+/
+/*
 create or replace procedure borrow(bookCode in number, memberID in varchar2, resultNum out number)
 is
     bookStatus books.b_status%type;
@@ -168,15 +203,51 @@ begin
     
 end;
 /
-execute borrow(305, 'hun2');
+*/
+commit;
+--variable message number(1);
+--execute borrow(300, 'hun2', :message);
+-- 반납
+create or replace procedure returnBook(bcode in number, mid in varchar2, message out number)
+is
+	exists_return char(1);
+begin
+	-- 반납가능한책이있는지
+	select
+	case when exists(select * from borrows where b_code = bcode and m_id = mid and borr_status = '대출중') then '1'
+	else '0' end
+	into exists_return
+	from dual;
 
+	--반납가능한책이있으면
+	if(exists_return = '1') then
+		update borrows
+		set borr_status = '반납', return_date = sysdate
+		where b_code = bcode and m_id = mid and borr_status = '대출중';
+
+		update books
+    		set b_status = '대출가능'
+    		where b_code = bcode;
+    
+    		update members
+    		set borr_count =borr_count - 1
+    		where m_id = mid;
+		message := 1;
+	else message := 0;
+	end if;
+end;
+/
+/*
 -- 반납
 update borrows
 set borr_status = '반납', return_date = sysdate
 where borr_code = 1002 and m_id = 'hun2' and borr_status = '대출중';
-
+*/
 -- ==============================================================
-
+/*
+drop trigger trigger_borrow;
+drop trigger trigger_return;
+SELECT * FROM ALL_TRIGGERS where table_name = 'BORROWS';
 -- 대출 시 트리거
 create or replace trigger trigger_borrow
 after insert on borrows
@@ -206,7 +277,7 @@ begin
     where m_id = :NEW.m_id;
 end;
 /
-
+*/
 -- ==================== 마이페이지 ==========================================
 -- 개인정보 수정
 update members
@@ -235,13 +306,11 @@ select * from borrows;
 commit;
 
 -- 회원 탈퇴
-create or replace procedure singoutmember;
-
 delete from members
-where m_id = 'hun2' and borr_count = 0;
+where m_id = 'jj9' and borr_count = 0;
 -- ==============================================================
 select * from members;
-select * from books;
+select * from search_books_view;
 select * from borrows;
 
 commit;

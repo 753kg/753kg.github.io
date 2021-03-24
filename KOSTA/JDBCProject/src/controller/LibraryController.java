@@ -32,6 +32,7 @@ public class LibraryController {
 				signUp(sc);
 				break;
 			case 2:
+				if(isLogin(userID, userPW)) { LibraryView.print("이미 로그인이 되어있습니다."); break;}
 				logIn(sc);
 				break;
 			case 3:
@@ -57,19 +58,27 @@ public class LibraryController {
 	}
 	
 	private static void borrowReturn(Scanner sc, String userID) {
-		System.out.println("1. 도서 대출 | 2. 도서 반납");
-		System.out.print("선택 >> ");
-		int num = sc.nextInt();
-		switch (num) {
-		case 1:
-			borrowBook(sc, userID);
-			break;
-		case 2:
-			returnBook(sc, userID);
-			break;
-		default:
-			break;
+		boolean run = true;
+		while(run) {
+			System.out.println("1. 도서 대출 | 2. 도서 반납 | 3. 뒤로가기");
+			System.out.print("선택 >> ");
+			int num = sc.nextInt();
+			switch (num) {
+			case 1:
+				borrowBook(sc, userID);
+				break;
+			case 2:
+				returnBook(sc, userID);
+				break;
+			case 3:
+				run = false;
+				break;
+			default:
+				LibraryView.print("유효하지 않은 작업입니다.");
+				break;
+			}
 		}
+		
 	}
 
 	private static void logIn(Scanner sc) {
@@ -86,46 +95,56 @@ public class LibraryController {
 	}
 
 	private static void myPage(Scanner sc, String userID) {
-		System.out.println("1. 개인정보수정 | 2. 대출조회/기간연장 | 3. 대출이력조회 | 4. 로그아웃 | 5. 회원탈퇴");
-		System.out.print("선택 >> ");
-		int num2 = sc.nextInt();
-		aa : switch (num2) {
-		case 1:
-			updateMember(sc, userID);
-			break;
-		case 2:
-			selectBorrowing(userID);
-			System.out.println("1. 기간연장하기 | 2. 뒤로가기");
-			int num3 = sc.nextInt();
-			switch(num3) {
+		boolean run = true;
+		while(run) {
+			System.out.println("1. 개인정보수정 | 2. 대출조회/기간연장 | 3. 대출이력조회 | 4. 로그아웃 | 5. 회원탈퇴 | 6. 뒤로가기");
+			System.out.print("선택 >> ");
+			int num2 = sc.nextInt();
+			switch (num2) {
 			case 1:
-				extendsDate(sc, userID); break;
-			case 2: break aa;
+				updateMember(sc, userID);
+				break;
+			case 2:
+				selectBorrowing(userID);
+				System.out.println("1. 기간연장하기 | 2. 뒤로가기");
+				System.out.print("선택 >> ");
+				int num3 = sc.nextInt();
+				switch(num3) {
+				case 1:
+					extendsDate(sc, userID); break;
+				case 2: break;
+				}
+				break;
+			case 3:
+				selectBorrHistory(userID);
+				break;
+			case 4:
+				userID = null; userPW = null;
+				LibraryView.print("로그아웃 되었습니다.");
+				run = false;
+				break;
+			case 5:
+				quitMembers(sc, userID);
+				userID = null; userPW = null;
+				run = false;
+				break;
+			case 6: run = false; break;
+			default: LibraryView.print("유효하지 않은 작업입니다."); break;
 			}
-		case 3:
-			selectBorrHistory(userID);
-			break;
-		case 4:
-			userID = null; userPW = null;
-			LibraryView.print("로그아웃 되었습니다.");
-			break;
-		case 5:
-			quitMembers(userID);
-			break;
-		default:	
-			break;
 		}
+		
 	}
 
-	private static void quitMembers(String userID) {
+	private static void quitMembers(Scanner sc, String userID) {
 		LibraryDAO dao = new LibraryDAO();
-		int result = dao.quitMembers(userID);
+		System.out.print("비밀번호 확인 >> ");
+		int result = dao.quitMembers(userID, sc.next());
 		LibraryView.print(result>0 ? "회원 탈퇴가 완료되었습니다." : "탈퇴할 수 없습니다.");
 	}
 
 	private static void extendsDate(Scanner sc, String userID) {
 		// TODO Auto-generated method stub
-		System.out.println("기간연장할 책의 대출코드를 입력하세요>> ");
+		System.out.print("기간연장할 책의 코드를 입력하세요>> ");
 		LibraryDAO dao = new LibraryDAO();
 		int result = dao.extendsDate(sc.nextInt(), userID);
 		LibraryView.print(result>0 ? "기간이 연장되었습니다." : "연장할 수 없습니다.");
@@ -151,7 +170,7 @@ public class LibraryController {
 	private static void returnBook(Scanner sc, String userID) {
 		selectBorrowing(userID);
 		LibraryDAO dao = new LibraryDAO();
-		System.out.print("반납할 책의 대출코드 입력 >> ");
+		System.out.print("반납할 책의 코드 입력 >> ");
 		int borr_code = sc.nextInt();
 		int result = dao.returnBook(borr_code, userID);
 		LibraryView.print(result>0 ? "반납이 완료되었습니다." : "반납할 수 없습니다.");
@@ -170,7 +189,7 @@ public class LibraryController {
 	}
 	
 	private static void borrowBook(Scanner sc, String userID) {
-		System.out.println("대출할 책의 코드 입력 >> ");
+		System.out.print("대출할 책의 코드 입력 >> ");
 		int b_code = sc.nextInt();
 		LibraryDAO dao = new LibraryDAO();
 		int result = dao.borrowBook(b_code, userID);

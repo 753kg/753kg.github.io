@@ -40,9 +40,9 @@ public class LibraryDAO {
 		return result;
 	}
 	
-	public int quitMembers(String userID) {
+	public int quitMembers(String userID, String userPW) {
 		int result = 0;
-		String sql = "delete from members where m_id = ? and borr_count = 0";
+		String sql = "delete from members where m_id = ? and m_pass = ? and borr_count = 0";
 		
 		Connection conn = DBUtil.getConnection();
 		PreparedStatement st = null;
@@ -50,6 +50,7 @@ public class LibraryDAO {
 		try {
 			st = conn.prepareStatement(sql);
 			st.setString(1, userID);
+			st.setString(2, userPW);
 			result = st.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -244,6 +245,31 @@ public class LibraryDAO {
 		return result;
 	}
 	
+	public int returnBook(int b_code, String m_id) {
+		int result = 0;
+		String sql = "{call returnBook(?, ?, ?)}";
+		
+		Connection conn = DBUtil.getConnection();
+		CallableStatement st = null;
+		
+		try {
+			st = conn.prepareCall(sql);
+			st.registerOutParameter(3, java.sql.Types.INTEGER);
+			st.setInt(1, b_code);
+			st.setString(2, m_id);
+			st.executeQuery();
+			
+			result = st.getInt(3);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		return result;
+	}
+	/*
 	public int returnBook(int borr_code, String m_id) {
 		int result = 0;
 		String sql = 
@@ -267,13 +293,13 @@ public class LibraryDAO {
 		}
 		return result;
 	}
-	
+	*/
 	// 대출내역조회
 	public List<BorrowVO> selectBorrowing(String m_id){
 		// 대출코드, 책 이름, 작가, 빌린날짜, 반납날짜, 대출상태
 		List<BorrowVO> borrlist = new ArrayList<>();
 		String sql = 
-				" select borr_code, b_name, author, borr_date, return_date, borr_status" +
+				" select borr_code, b_code, b_name, author, borr_date, return_date, borr_status" +
 				" from borrowing_view join books using(b_code)" +
 				" where m_id = ?";
 		
@@ -305,7 +331,7 @@ public class LibraryDAO {
 		List<BorrowVO> borrlist = new ArrayList<>();
 		
 		String sql = 
-				" select borr_code, b_name, author, borr_date, return_date, borr_status" +
+				" select borr_code, b_code, b_name, author, borr_date, return_date, borr_status" +
 				" from borrows join books using(b_code)" +
 				" where m_id = ?" +
 				" order by return_date desc";
@@ -332,19 +358,19 @@ public class LibraryDAO {
 		return borrlist;
 	}
 	
-	public int extendsDate(int borr_code, String m_id) {
+	public int extendsDate(int b_code, String m_id) {
 		int result = 0;
 		String sql = 
 				" update borrowing_view" +
 				" set return_date = return_date + 7" +
-				" where borr_code = ? and m_id = ?";
+				" where b_code = ? and m_id = ?";
 		
 		Connection conn = DBUtil.getConnection();
 		PreparedStatement st = null;
 		
 		try {
 			st = conn.prepareStatement(sql);
-			st.setInt(1, borr_code);
+			st.setInt(1, b_code);
 			st.setString(2, m_id);
 			result = st.executeUpdate();
 		} catch (SQLException e) {
@@ -386,6 +412,7 @@ public class LibraryDAO {
 	private BorrowVO makeBorrVO(ResultSet rs) throws SQLException {
 		BorrowVO borr = new BorrowVO();
 		borr.setBorr_code(rs.getInt("borr_code"));
+		borr.setB_code(rs.getInt("b_code"));
 		borr.setB_name(rs.getString("b_name"));
 		borr.setAuthor(rs.getString("author"));
 		borr.setBorr_date(rs.getDate("borr_date"));

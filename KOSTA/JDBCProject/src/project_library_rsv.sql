@@ -295,3 +295,6 @@ where rsv_member = 'jj99';
 update r_mem
 set rsv_count = 0
 where m_id = 'jj99';
+
+select rsv_member from r_borr 
+where b_code = 300 and rsv_member = 'jj99';
