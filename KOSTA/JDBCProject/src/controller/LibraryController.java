@@ -23,7 +23,7 @@ public class LibraryController {
 			System.out.print("LIBRARY PROGRAM =========================");
 			if(isLogin(userID, userPW)) System.out.println(" " + userID + "님 로그인중");
 			else System.out.println("=============");
-			System.out.println("1.회원가입|2.로그인|3.도서 검색|4.대출/반납|5.마이페이지|6.종료");
+			System.out.println("1.회원가입|2.로그인|3.도서 검색|4.대출/반납/예약|5.마이페이지|6.종료");
 			System.out.println("======================================================");
 			System.out.print("작업을 선택하세요 >> ");
 			int work = sc.nextInt();
@@ -60,7 +60,7 @@ public class LibraryController {
 	private static void borrowReturn(Scanner sc, String userID) {
 		boolean run = true;
 		while(run) {
-			System.out.println("1. 도서 대출 | 2. 도서 반납 | 3. 뒤로가기");
+			System.out.println("1.대출|2.반납|3.예약|4.예약도서대출/반납|5.뒤로가기");
 			System.out.print("선택 >> ");
 			int num = sc.nextInt();
 			switch (num) {
@@ -71,6 +71,23 @@ public class LibraryController {
 				returnBook(sc, userID);
 				break;
 			case 3:
+				rsvBook(sc, userID);
+				break;
+			case 4:
+				System.out.println("1. 예약도서 대출 | 2. 예약도서 반납");
+				System.out.print("선택>> ");
+				int num2 = sc.nextInt();
+				switch (num2) {
+				case 1:
+					rsvBookBorrow(sc, userID);
+					break;
+				case 2:
+					rsvBookReturn(sc, userID);
+				default:
+					break;
+				}
+				break;
+			case 5:
 				run = false;
 				break;
 			default:
@@ -79,6 +96,82 @@ public class LibraryController {
 			}
 		}
 		
+	}
+
+	private static void rsvBookBorrow(Scanner sc, String userID) {
+		LibraryDAO dao = new LibraryDAO();
+		int result = dao.rsvBookBorrow(userID);
+		//System.out.println(result);
+		switch (result) {
+		case 1:
+			LibraryView.print("XX대출실패XX : 이미 대출중인 도서입니다.");
+			break;
+		case 6:
+		case 2:
+			LibraryView.print("XX대출실패XX : 최대 2권까지만 대출 가능합니다.");
+			break;
+		case 3:
+			LibraryView.print("대출이 완료되었습니다.");
+			break;
+		case 4:
+			LibraryView.print("XX대출실패XX : 예약한 도서가 없습니다.");
+			break;
+		case 5:
+			LibraryView.print("XX대출실패XX : 대출 가능한 예약 도서가 없습니다.");
+			break;
+		default:
+			LibraryView.print("XX대출실패XX : ERROR");
+			break;
+		}
+	}
+
+	private static void rsvBookReturn(Scanner sc, String userID) {
+		LibraryDAO dao = new LibraryDAO();
+		System.out.print("반납할 예약 도서의 코드 입력 >> ");
+		int borr_code = sc.nextInt();
+		int result = dao.rsvBookReturn(borr_code, userID);
+		switch (result) {
+		case 1:
+			LibraryView.print("XX반납실패XX : 반납 가능한 도서가 없습니다.");
+			break;
+		case 2:
+			LibraryView.print("XX반납실패XX : 일반 반납 기능을 이용하세요.");
+			break;
+		case 3:
+			LibraryView.print("반납이 완료되었습니다.");
+			break;
+		default:
+			LibraryView.print("XX반납실패XX : ERROR");
+			break;
+		}
+	}
+
+	private static void rsvBook(Scanner sc, String userID) {
+		System.out.print("예약할 책의 코드 입력 >> ");
+		int b_code = sc.nextInt();
+		LibraryDAO dao = new LibraryDAO();
+		int result = dao.rsvBook(b_code, userID);
+		//System.out.println(result);
+		switch (result) {
+		case 1:
+			LibraryView.print("XX예약실패XX : 대출 가능한 책은 예약할 수 없습니다.");
+			break;
+		case 2:
+			LibraryView.print("XX예약실패XX : 이미 예약중인 도서입니다.");
+			break;
+		case 3:
+			LibraryView.print("XX예약실패XX : 회원님이 대출중인 도서는 예약할 수 없습니다.");
+			break;
+		case 4:
+			LibraryView.print("XX예약실패XX : 예약은 1인당 1권만 가능합니다.");
+			break;
+		case 5:
+			LibraryView.print("예약이 완료되었습니다.");
+			break;
+		default:
+			LibraryView.print("XX예약실패XX : ERROR");
+			break;
+		}
 	}
 
 	private static void logIn(Scanner sc) {
@@ -97,7 +190,7 @@ public class LibraryController {
 	private static void myPage(Scanner sc, String userID) {
 		boolean run = true;
 		while(run) {
-			System.out.println("1. 개인정보수정 | 2. 대출조회/기간연장 | 3. 대출이력조회 | 4. 로그아웃 | 5. 회원탈퇴 | 6. 뒤로가기");
+			System.out.println("1. 개인정보수정 | 2. 대출조회/기간연장 | 3. 대출이력조회 | 4. 예약도서조회 | 5. 로그아웃 | 6. 회원탈퇴 | 7. 뒤로가기");
 			System.out.print("선택 >> ");
 			int num2 = sc.nextInt();
 			switch (num2) {
@@ -119,20 +212,29 @@ public class LibraryController {
 				selectBorrHistory(userID);
 				break;
 			case 4:
+				selectRsvBook(userID);
+				break;
+			case 5:
 				userID = null; userPW = null;
 				LibraryView.print("로그아웃 되었습니다.");
 				run = false;
 				break;
-			case 5:
+			case 6:
 				quitMembers(sc, userID);
 				userID = null; userPW = null;
 				run = false;
 				break;
-			case 6: run = false; break;
+			case 7: run = false; break;
 			default: LibraryView.print("유효하지 않은 작업입니다."); break;
 			}
 		}
 		
+	}
+
+	private static void selectRsvBook(String userID2) {
+		LibraryDAO dao = new LibraryDAO();
+		BorrowVO borr = dao.selectRsvBook(userID);
+		LibraryView.printBorrows(borr);
 	}
 
 	private static void quitMembers(Scanner sc, String userID) {
@@ -173,7 +275,20 @@ public class LibraryController {
 		System.out.print("반납할 책의 코드 입력 >> ");
 		int borr_code = sc.nextInt();
 		int result = dao.returnBook(borr_code, userID);
-		LibraryView.print(result>0 ? "반납이 완료되었습니다." : "반납할 수 없습니다.");
+		switch (result) {
+		case 1:
+			LibraryView.print("XX반납실패XX : 반납 가능한 도서가 없습니다.");
+			break;
+		case 2:
+			LibraryView.print("XX반납실패XX : 예약도서반납 기능을 이용하세요.");
+			break;
+		case 3:
+			LibraryView.print("반납이 완료되었습니다.");
+			break;
+		default:
+			LibraryView.print("XX반납실패XX : ERROR");
+			break;
+		}
 	}
 	
 	private static void selectBorrowing(String userID) {
@@ -193,7 +308,7 @@ public class LibraryController {
 		int b_code = sc.nextInt();
 		LibraryDAO dao = new LibraryDAO();
 		int result = dao.borrowBook(b_code, userID);
-		System.out.println(result);
+		//System.out.println(result);
 		switch (result) {
 		case 1:
 			LibraryView.print("XX대출실패XX : 이미 대출중인 도서입니다.");

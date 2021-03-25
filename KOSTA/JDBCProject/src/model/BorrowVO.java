@@ -11,12 +11,14 @@ public class BorrowVO {
 	Date borr_date;
 	Date return_date;
 	String borr_status;
+	String rsv_member;
 	
 	public BorrowVO() {
 		
 	}
 
-	public BorrowVO(int borr_code, int b_code, String b_name, String author, Date borr_date, Date return_date, String borr_status) {
+	public BorrowVO(int borr_code, int b_code, String b_name, String author, Date borr_date, Date return_date, 
+			String borr_status, String rsv_member) {
 		super();
 		this.borr_code = borr_code;
 		this.b_code = b_code;
@@ -25,6 +27,7 @@ public class BorrowVO {
 		this.borr_date = borr_date;
 		this.return_date = return_date;
 		this.borr_status = borr_status;
+		this.rsv_member = rsv_member;
 	}
 
 	public int getB_code() {
@@ -83,10 +86,21 @@ public class BorrowVO {
 		this.borr_status = borr_status;
 	}
 
+	
+	
+	public String getRsv_member() {
+		return rsv_member;
+	}
+
+	public void setRsv_member(String rsv_member) {
+		this.rsv_member = rsv_member;
+	}
+
 	@Override
 	public String toString() {
 		return "BorrowVO [borr_code=" + borr_code + ", b_code=" + b_code + ", b_name=" + b_name + ", author=" + author
-				+ ", borr_date=" + borr_date + ", return_date=" + return_date + ", borr_status=" + borr_status + "]";
+				+ ", borr_date=" + borr_date + ", return_date=" + return_date + ", borr_status=" + borr_status
+				+ ", rsv_member=" + rsv_member + "]";
 	}
 
 	

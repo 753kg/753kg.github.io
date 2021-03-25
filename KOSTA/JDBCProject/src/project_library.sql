@@ -13,7 +13,8 @@ create table members(
     m_name varchar2(20) not null,
     birth date,
     phone varchar2(15),
-    borr_count number(1) default 0
+    borr_count number(1) default 0,
+    rsv_count number(1) default 0
 );
 
 create table books(
@@ -24,8 +25,8 @@ create table books(
     pub_date date not null,
     cover varchar2(30),
     category varchar2(20) not null,
-    b_status varchar2(12) default '대출가능'
-    --borr_code constraint books_borr_code_fk references borrows(borr_code)
+    b_status varchar2(12) default '대출가능',
+    rsv_status varchar2(12)
 );
 
 create table borrows(
@@ -34,7 +35,8 @@ create table borrows(
     m_id constraint borrows_member_id_FK references members(m_id) ON DELETE CASCADE,
     borr_date date default sysdate,
     return_date date default sysdate + 14,
-    borr_status varchar2(12)
+    borr_status varchar2(12),
+    rsv_member constraint borrows_rsv_member_FK references members(m_id)
 );
 
 -- ==============================================================
@@ -117,31 +119,32 @@ create or replace view search_books_view
 as
 select b_code, b_name, author, pub, pub_date, 
     nvl(cover, '이미지없음') cover, category, b_status,
-    decode(return_date, null, '-', return_date) return_date
+    decode(return_date, null, '-', return_date) return_date, 
+    decode(rsv_status, null, '-', rsv_status) rsv_status
 from books left outer join borrowing_view using(b_code);
 
 -- 전체도서
-select b_code, b_name, author, pub, pub_date, cover, b_status, return_date
+select b_code, b_name, author, pub, pub_date, cover, b_status, return_date, rsv_status
 from search_books_view;
 
 -- 도서명으로 검색
-select b_code, b_name, author, pub, pub_date, cover, b_status, return_date
+select b_code, b_name, author, pub, pub_date, cover, b_status, return_date, rsv_status
 from search_books_view
 where b_name like '%달러구트%';
 
 -- 작가명으로 검색
-select b_code, b_name, author, pub, pub_date, cover, b_status, return_date
+select b_code, b_name, author, pub, pub_date, cover, b_status, return_date, rsv_status
 from search_books_view
 where author like '%세랑%';
 
 -- 카테고리별 조회
-select b_code, b_name, author, pub, pub_date, cover, b_status, return_date
+select b_code, b_name, author, pub, pub_date, cover, b_status, return_date, rsv_status
 from search_books_view
 where category = '소설';
 
 -- ==============================================================
 
--- 도서 대출
+-- 1. 일반 도서 대출
 create or replace procedure borrow(bcode in number, mid in varchar2, message out number)
 is
 	exists_borr char(1);
@@ -165,7 +168,7 @@ begin
 		values(borrows_code_seq.nextval, bcode, mid, '대출중');
         
         update books
-        set b_status = '대출중'
+        set b_status = '대출중', rsv_status = '예약가능'
         where b_code = bcode;
     
         update members
@@ -176,6 +179,214 @@ begin
 	end if;
 end;
 /
+
+-- 2. 일반 도서 반납
+create or replace procedure returnBook(bcode in number, mid in varchar2, message out number)
+is
+	exists_return char(1);
+    exists_rsvmem char(1);
+begin
+	-- 반납가능한책이있는지
+	select
+	case when exists(select * from borrowing_view 
+                    where b_code = bcode and m_id = mid) then '1'
+	else '0' end
+	into exists_return
+	from dual;
+
+	--반납가능한책이있으면
+    if(exists_return = '0') then message := 1; --=> 반납가능한도서가없습니다.
+    else
+        -- 반납가능한 책이 있으면
+        -- 예약중인 회원이 있는지 체크
+        select nvl2(rsv_member, '1', '0')
+        into exists_rsvmem
+        from borrowing_view
+        where b_code = bcode and m_id = mid;
+        
+        -- 예약중인 회원이 있으면
+        if(exists_rsvmem = '1') then message := 2; --=> 예약도서반납기능을이용하세요
+        else
+            --예약중인 회원이 없으면
+            -- 대출이력변경
+            update borrows set borr_status = '반납', return_date = sysdate
+            where borr_code = ( select borr_code
+                                from borrowing_view
+                                where b_code = bcode and m_id = mid );
+            
+            -- 회원 도서 대출 권수 -1
+            update members set borr_count = borr_count -1
+            where m_id = mid;
+            
+            -- 책 상태 변경
+            update books set b_status = '대출가능', rsv_status = null
+            where b_code = bcode;
+            
+            message := 3; --=> 반납 완료
+        end if;
+    end if;
+   
+end;
+/
+
+-- 3. 대출중인 책 예약
+create or replace procedure rsvBook(bcode in number, mid in varchar2, message out number)
+is
+    rsvStatus books.rsv_status%type;
+    borrCode borrows.borr_code%type;
+    borrowingMem borrows.m_id%type;
+    rsvCount members.rsv_count%type;
+    
+    exists_borr char(1);
+    exists_rsv char(1);
+begin
+    -- 책이 대출중인지
+    select
+    case when exists(select * from books 
+                    where b_code = bcode and b_status = '대출중') then '1'
+    else '0' end
+    into exists_borr
+    from dual;
+    -- 예약가능상태인지
+    select
+    case when exists(select * from books 
+                    where b_code = bcode and rsv_status = '예약가능') then '1'
+    else '0' end
+    into exists_rsv
+    from dual;
+    
+    -- 대출가능상태면
+    if(exists_borr = '0') then message := 1; --> 대출가능한 책은 예약할 수 없습니다.
+    elsif(exists_rsv = '0') then message := 2; --> 이미 예약중인 도서입니다.
+    else
+        -- 책의 대출코드와 대출중인 회원 아이디를 저장
+        select borr_code, m_id
+        into borrCode, borrowingMem
+        from borrows
+        where b_code = bcode and borr_status = '대출중';
+        -- 예약하는 회원의 rsv_count를 저장
+        select rsv_count into rsvCount from members where m_id = mid;
+        
+        if(borrowingMem = mid) then message := 3; --> 회원님이 대출중인 도서는 예약할 수 없습니다.
+        elsif(rsvCount >= 1) then message := 4; --> 예약은 1인당 1권만 가능합니다.
+        else
+            update borrows
+            set rsv_member = mid
+            where borr_code = borrCode;
+                
+            update books
+            set rsv_status = '예약중'
+            where b_code = bcode;
+
+            update members
+            set rsv_count = rsv_count + 1
+            where m_id = mid;
+        
+            message := 5; --> 예약이 완료되었습니다.
+        end if;
+    end if;
+
+end;
+/
+
+-- 4. 예약중인 책 반납하기
+create or replace procedure rsvBookReturn(bcode in number, mid in varchar2, message out number)
+is
+    exists_return char(1);
+    exists_rsvmem char(1);
+    borrCode borrows.borr_code%type;
+begin
+    -- 반납가능한 도서가 있는지
+    select 
+    case when exists(select * from borrowing_view
+                     where b_code = bcode and m_id = mid) then '1'
+    else '0' end
+    into exists_return
+    from dual;
+    
+    if(exists_return = '0') then message := 1; --> 반납가능한 도서가 없습니다.
+    else
+        -- 반납가능한 도서가 있으면
+        -- 예약중인 회원이 있는지 체크
+        select nvl2(rsv_member, '1', '0') 
+        into exists_rsvmem
+        from borrowing_view 
+        where b_code = bcode and m_id = mid;
+        
+        -- 예약중인 회원이 없으면
+        if(exists_rsvmem = '0') then message := 2; --> '일반 반납 기능을 이용하세요'
+        else
+            --예약중인 회원이 있으면
+            -- 그 도서의 대출 코드를 저장
+            select borr_code
+            into borrCode
+            from borrowing_view
+            where b_code = bcode and m_id = mid;
+        
+            -- 대출이력 변경
+            update borrows
+            set borr_status = '반납', return_date = sysdate
+            where borr_code = borrCode;
+        
+            -- 회원의 도서 권수 빼기
+            update members
+            set borr_count = borr_count - 1
+            where m_id = mid;
+            
+            
+            message := 3; --> '반납이 완료되었습니다.
+        end if;
+    end if;
+end;
+/
+
+-- 5. 예약한 책 대출하기
+create or replace procedure rsvBookBorrow(mid in varchar2, message out number)
+is
+    exists_borr char(1);
+    rsvCount members.rsv_count%type;
+    borrCount members.borr_count%type;
+    bookCode books.b_code%type;
+    borrCode borrows.borr_code%type;
+    returnMessage number;
+begin
+    -- 예약한 도서가 있는지, 대출중인 책이 몇권인지
+    select rsv_count, borr_count 
+    into rsvCount, borrCount 
+    from members 
+    where m_id = mid;
+
+    -- 대출 가능한 예약도서가 있는지
+    select 
+    case when exists(select * from borrows where rsv_member = mid and borr_status = '반납') then '1'
+    else '0' end
+    into exists_borr
+    from dual;
+    
+    if(rsvCount = 0) then message := 4; --> 예약한 도서가 없습니다.
+    elsif(exists_borr = '0') then message := 5; --> 대출 가능한 예약 도서가 없습니다.
+    elsif(borrCount >= 2) then message := 6; --> 최대 2권까지 대출 가능합니다.
+    else
+        -- 책을 대출 가능한 상태로 만들기
+        -- 예약한 책 찾기
+        select b_code, borr_code into bookCode, borrCode from borrows where rsv_member = mid;
+        
+        update books set b_status = '대출가능' 
+        where b_code = bookCode;
+        
+        -- borrow 프로시저 부르기
+        borrow(bookCode, mid, returnMessage);
+
+        -- borr 테이블 rsv_member = null로 만들기
+        update borrows set rsv_member = null where rsv_member = mid;
+        update members set rsv_count = 0 where m_id = mid;
+        
+        message := returnMessage;
+    end if;
+
+end;
+/
+
 /*
 create or replace procedure borrow(bookCode in number, memberID in varchar2, resultNum out number)
 is
@@ -208,35 +419,22 @@ commit;
 --variable message number(1);
 --execute borrow(300, 'hun2', :message);
 -- 반납
-create or replace procedure returnBook(bcode in number, mid in varchar2, message out number)
-is
-	exists_return char(1);
-begin
-	-- 반납가능한책이있는지
-	select
-	case when exists(select * from borrows where b_code = bcode and m_id = mid and borr_status = '대출중') then '1'
-	else '0' end
-	into exists_return
-	from dual;
-
-	--반납가능한책이있으면
+ /*    
 	if(exists_return = '1') then
 		update borrows
 		set borr_status = '반납', return_date = sysdate
 		where b_code = bcode and m_id = mid and borr_status = '대출중';
 
 		update books
-    		set b_status = '대출가능'
-    		where b_code = bcode;
+        set b_status = '대출가능'
+        where b_code = bcode;
     
-    		update members
-    		set borr_count =borr_count - 1
-    		where m_id = mid;
+        update members
+        set borr_count =borr_count - 1
+        where m_id = mid;
 		message := 1;
 	else message := 0;
-	end if;
-end;
-/
+	end if;*/
 /*
 -- 반납
 update borrows
@@ -312,5 +510,22 @@ where m_id = 'jj9' and borr_count = 0;
 select * from members;
 select * from search_books_view;
 select * from borrows;
+select * from borrowing_view;
+
+variable aab number;
+execute rsvBook(100, 'hun2', :aab);
+print aab;
+
+execute borrow(300, 'hun2', :aab);
+print aab;
+
+select borr_count from members where m_id = 'hun2';
+select rsv_count from members where m_id = 'hun2';
 
 commit;
+
+select * from borrows where rsv_member = 'hun2';
+
+select borr_code, b_code, b_name, author, borr_date, return_date, borr_status, rsv_member
+from borrows join books using(b_code)
+where rsv_member = 'aodrn';

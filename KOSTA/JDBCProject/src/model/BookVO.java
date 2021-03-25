@@ -12,13 +12,14 @@ public class BookVO {
 	//String category;
 	String b_status;
 	String return_date;
+	String rsv_status;
 	
 	public BookVO() {
 		
 	}
 
 	public BookVO(int b_code, String b_name, String author, String pub, Date pub_date, String cover, String b_status,
-			String return_date) {
+			String return_date, String rsv_status) {
 		super();
 		this.b_code = b_code;
 		this.b_name = b_name;
@@ -28,6 +29,17 @@ public class BookVO {
 		this.cover = cover;
 		this.b_status = b_status;
 		this.return_date = return_date;
+		this.rsv_status = rsv_status;
+	}
+
+	
+	
+	public String getRsv_status() {
+		return rsv_status;
+	}
+
+	public void setRsv_status(String rsv_status) {
+		this.rsv_status = rsv_status;
 	}
 
 	public int getB_code() {
@@ -97,9 +109,11 @@ public class BookVO {
 	@Override
 	public String toString() {
 		return "BookVO [b_code=" + b_code + ", b_name=" + b_name + ", author=" + author + ", pub=" + pub + ", pub_date="
-				+ pub_date + ", cover=" + cover + ", b_status=" + b_status + ", return_date=" + return_date + "]";
+				+ pub_date + ", cover=" + cover + ", b_status=" + b_status + ", return_date=" + return_date
+				+ ", rsv_status=" + rsv_status + "]";
 	}
 
+	
 	
 	
 }

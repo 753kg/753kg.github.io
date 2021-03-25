@@ -93,10 +93,9 @@ public class LibraryDAO {
 		List<BookVO> booklist = new ArrayList<>();
 		
 		String sql = 
-				" select b_code, b_name, author, pub, pub_date," +
-			    " nvl(cover, '이미지없음') cover, b_status," +
-			    " decode(return_date, null, '-', return_date) return_date" +
-			    " from books left outer join borrowing_view using(b_code)";
+				" select b_code, b_name, author, pub, pub_date, cover, "+
+				" b_status, return_date, rsv_status" +
+				" from search_books_view";
 				
 		Connection conn = DBUtil.getConnection();
 		Statement st = null;
@@ -124,10 +123,9 @@ public class LibraryDAO {
 		List<BookVO> booklist = new ArrayList<>();
 		
 		String sql = 
-				" select b_code, b_name, author, pub, pub_date," +
-			    " nvl(cover, '이미지없음') cover, b_status," +
-			    " decode(return_date, null, '-', return_date) return_date" +
-			    " from books left outer join borrowing_view using(b_code)" +
+				" select b_code, b_name, author, pub, pub_date, cover, " +
+				" b_status, return_date, rsv_status" +
+				" from search_books_view" +
 			    " where b_name like '%'||?||'%'";
 				
 		Connection conn = DBUtil.getConnection();
@@ -157,10 +155,9 @@ public class LibraryDAO {
 		List<BookVO> booklist = new ArrayList<>();
 		
 		String sql = 
-				" select b_code, b_name, author, pub, pub_date," +
-			    " nvl(cover, '이미지없음') cover, b_status," +
-			    " decode(return_date, null, '-', return_date) return_date" +
-			    " from books left outer join borrowing_view using(b_code)" +
+				" select b_code, b_name, author, pub, pub_date, cover, " +
+				" b_status, return_date, rsv_status" +
+				" from search_books_view" +
 			    " where author like '%'||?||'%'";
 				
 		Connection conn = DBUtil.getConnection();
@@ -190,10 +187,9 @@ public class LibraryDAO {
 		List<BookVO> booklist = new ArrayList<>();
 		
 		String sql = 
-				" select b_code, b_name, author, pub, pub_date," +
-			    " nvl(cover, '이미지없음') cover, b_status," +
-			    " decode(return_date, null, '-', return_date) return_date" +
-			    " from books left outer join borrowing_view using(b_code)" +
+				" select b_code, b_name, author, pub, pub_date, cover, " +
+				" b_status, return_date, rsv_status" +
+				" from search_books_view" +
 			    " where category like '%'||?||'%'";
 				
 		Connection conn = DBUtil.getConnection();
@@ -269,22 +265,23 @@ public class LibraryDAO {
 		}
 		return result;
 	}
-	/*
-	public int returnBook(int borr_code, String m_id) {
+	
+	public int rsvBook(int b_code, String m_id) {
 		int result = 0;
-		String sql = 
-				" update borrows" +
-				" set borr_status = '반납', return_date = sysdate" +
-				" where borr_code = ? and m_id = ? and borr_status = '대출중'";
+		String sql = "{call rsvBook(?, ?, ?)}";
 		
 		Connection conn = DBUtil.getConnection();
-		PreparedStatement st = null;
+		CallableStatement st = null;
 		
 		try {
-			st = conn.prepareStatement(sql);
-			st.setInt(1, borr_code);
+			st = conn.prepareCall(sql);
+			st.registerOutParameter(3, java.sql.Types.INTEGER);
+			st.setInt(1, b_code);
 			st.setString(2, m_id);
-			result = st.executeUpdate();
+			st.executeQuery();
+			
+			result = st.getInt(3);
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -293,13 +290,92 @@ public class LibraryDAO {
 		}
 		return result;
 	}
-	*/
+	
+	public int rsvBookReturn(int b_code, String m_id) {
+		int result = 0;
+		String sql = "{call rsvBookReturn(?, ?, ?)}";
+		
+		Connection conn = DBUtil.getConnection();
+		CallableStatement st = null;
+		
+		try {
+			st = conn.prepareCall(sql);
+			st.registerOutParameter(3, java.sql.Types.INTEGER);
+			st.setInt(1, b_code);
+			st.setString(2, m_id);
+			st.executeQuery();
+			
+			result = st.getInt(3);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		return result;
+	}
+	
+	public int rsvBookBorrow(String m_id) {
+		int result = 0;
+		String sql = "{call rsvBookBorrow(?, ?)}";
+		
+		Connection conn = DBUtil.getConnection();
+		CallableStatement st = null;
+		
+		try {
+			st = conn.prepareCall(sql);
+			st.registerOutParameter(2, java.sql.Types.INTEGER);
+			st.setString(1, m_id);
+			st.executeQuery();
+			
+			result = st.getInt(2);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		return result;
+	}
+	
+	public BorrowVO selectRsvBook(String m_id){
+		// 대출코드, 책 이름, 작가, 빌린날짜, 반납날짜, 대출상태
+		BorrowVO borr = null;
+		String sql = "select borr_code, b_code, b_name, author, borr_date, return_date, borr_status, rsv_member "
+				+ " from borrows join books using(b_code)"
+				+ " where rsv_member = ?";
+		
+		Connection conn = DBUtil.getConnection();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement(sql);
+			st.setString(1, m_id);
+			rs = st.executeQuery();
+			while(rs.next()) {
+				borr = makeBorrVO(rs);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(rs, st, conn);
+		}
+		
+		
+		return borr;
+	}
+	
 	// 대출내역조회
 	public List<BorrowVO> selectBorrowing(String m_id){
 		// 대출코드, 책 이름, 작가, 빌린날짜, 반납날짜, 대출상태
 		List<BorrowVO> borrlist = new ArrayList<>();
 		String sql = 
-				" select borr_code, b_code, b_name, author, borr_date, return_date, borr_status" +
+				" select borr_code, b_code, b_name, author, borr_date, return_date, borr_status, rsv_member" +
 				" from borrowing_view join books using(b_code)" +
 				" where m_id = ?";
 		
@@ -331,7 +407,7 @@ public class LibraryDAO {
 		List<BorrowVO> borrlist = new ArrayList<>();
 		
 		String sql = 
-				" select borr_code, b_code, b_name, author, borr_date, return_date, borr_status" +
+				" select borr_code, b_code, b_name, author, borr_date, return_date, borr_status, rsv_member" +
 				" from borrows join books using(b_code)" +
 				" where m_id = ?" +
 				" order by return_date desc";
@@ -418,6 +494,7 @@ public class LibraryDAO {
 		borr.setBorr_date(rs.getDate("borr_date"));
 		borr.setReturn_date(rs.getDate("return_date"));
 		borr.setBorr_status(rs.getString("borr_status"));
+		borr.setRsv_member(rs.getString("rsv_member"));
 		return borr;
 	}
 	
@@ -432,6 +509,7 @@ public class LibraryDAO {
 		book.setCover(rs.getString("cover"));
 		book.setB_status(rs.getString("b_status"));
 		book.setReturn_date(rs.getString("return_date"));
+		book.setRsv_status(rs.getString("rsv_status"));
 		return book;
 	}
 }
