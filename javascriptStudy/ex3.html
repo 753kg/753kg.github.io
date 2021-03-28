@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+  <!-- 선택자 :: class는 .을 꼭 붙임 , id는 #을 붙임 -->
+  <!-- class : 그룹핑, id : 한가지 대상을 식별 -->
+  <!-- class가 더 포괄적, id는 타켓팅 -->
+  <!-- 우선순위 id > class > 일반태그 -->
+  <style>
+    .js {
+      font-weight:bold;
+      color:red;
+    }
+    #first{
+      color:green;
+    }
+    span{
+      color:blue;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">WEB</a></h1>
+  <h2 style="background-color:coral; color:powderblue;">JavaScript</h2>
+  <p>
+    <span id="first" class="js">자바스크립트</span>는 객체 기반의 스크립트 프로그래밍 언어이다. <span class="js">자바스크립트</span>는 <span>웹 브라우저</span> 내에서 주로 사용하며, 다른 응용 프로그램의 내장 객체에도 접근할 수 있는 기능을 가지고 있다. 또한 <span class="js">자바스크립트</span>는 <span>Node.js</span>와 같은 런타임 환경과 같이 서버 프로그래밍에도 사용되고 있다.
+  </p>
+<body>
+</html>
