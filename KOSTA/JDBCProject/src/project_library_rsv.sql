@@ -379,5 +379,7 @@ variable testval number;
 execute rsvBook2(300, 'hun2', :testval);
 print testval
 
+select rsv_count from r_mem where m_id = 'hun2';
+
 execute rsvBookReturn(305, 'jj99');
 execute rsvBookBorrow('hun22');

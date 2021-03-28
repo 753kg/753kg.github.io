@@ -77,7 +77,6 @@ public class LibraryDAO {
 			
 			if(rs.next()) result = 1;
 			
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,7 +84,6 @@ public class LibraryDAO {
 			DBUtil.dbClose(rs, st, conn);
 		}
 				
-		
 		return result;
 	}
 	
@@ -215,22 +213,21 @@ public class LibraryDAO {
 		return booklist;
 	}
 	
-	public int borrowBook(int b_code, String userID) {
-		int result = 0;
+	public String borrowBook(int b_code, String userID) {
+		String message = null;
 		String sql = "{call borrow(?, ?, ?)}";
 		
 		Connection conn = DBUtil.getConnection();
 		CallableStatement st = null;
-		//ResultSet rs = null;
 		
 		try {
 			st = conn.prepareCall(sql);
-			st.registerOutParameter(3, java.sql.Types.INTEGER);
+			st.registerOutParameter(3, java.sql.Types.VARCHAR);
 			st.setInt(1, b_code);
 			st.setString(2, userID);
 			st.executeQuery();
 			
-			result = st.getInt(3);
+			message = st.getString(3);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -238,11 +235,11 @@ public class LibraryDAO {
 		} finally {
 			DBUtil.dbClose(null, st, conn);
 		}
-		return result;
+		return message;
 	}
 	
-	public int returnBook(int b_code, String m_id) {
-		int result = 0;
+	public String returnBook(int b_code, String m_id) {
+		String message = null;
 		String sql = "{call returnBook(?, ?, ?)}";
 		
 		Connection conn = DBUtil.getConnection();
@@ -250,12 +247,12 @@ public class LibraryDAO {
 		
 		try {
 			st = conn.prepareCall(sql);
-			st.registerOutParameter(3, java.sql.Types.INTEGER);
+			st.registerOutParameter(3, java.sql.Types.VARCHAR);
 			st.setInt(1, b_code);
 			st.setString(2, m_id);
 			st.executeQuery();
 			
-			result = st.getInt(3);
+			message = st.getString(3);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -263,11 +260,11 @@ public class LibraryDAO {
 		} finally {
 			DBUtil.dbClose(null, st, conn);
 		}
-		return result;
+		return message;
 	}
 	
-	public int rsvBook(int b_code, String m_id) {
-		int result = 0;
+	public String rsvBook(int b_code, String m_id) {
+		String message = null;
 		String sql = "{call rsvBook(?, ?, ?)}";
 		
 		Connection conn = DBUtil.getConnection();
@@ -275,12 +272,12 @@ public class LibraryDAO {
 		
 		try {
 			st = conn.prepareCall(sql);
-			st.registerOutParameter(3, java.sql.Types.INTEGER);
+			st.registerOutParameter(3, java.sql.Types.VARCHAR);
 			st.setInt(1, b_code);
 			st.setString(2, m_id);
 			st.executeQuery();
 			
-			result = st.getInt(3);
+			message = st.getString(3);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -288,11 +285,11 @@ public class LibraryDAO {
 		} finally {
 			DBUtil.dbClose(null, st, conn);
 		}
-		return result;
+		return message;
 	}
 	
-	public int rsvBookReturn(int b_code, String m_id) {
-		int result = 0;
+	public String rsvBookReturn(int b_code, String m_id) {
+		String message = null;
 		String sql = "{call rsvBookReturn(?, ?, ?)}";
 		
 		Connection conn = DBUtil.getConnection();
@@ -300,12 +297,12 @@ public class LibraryDAO {
 		
 		try {
 			st = conn.prepareCall(sql);
-			st.registerOutParameter(3, java.sql.Types.INTEGER);
+			st.registerOutParameter(3, java.sql.Types.VARCHAR);
 			st.setInt(1, b_code);
 			st.setString(2, m_id);
 			st.executeQuery();
 			
-			result = st.getInt(3);
+			message = st.getString(3);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -313,11 +310,11 @@ public class LibraryDAO {
 		} finally {
 			DBUtil.dbClose(null, st, conn);
 		}
-		return result;
+		return message;
 	}
 	
-	public int rsvBookBorrow(String m_id) {
-		int result = 0;
+	public String rsvBookBorrow(String m_id) {
+		String message = null;
 		String sql = "{call rsvBookBorrow(?, ?)}";
 		
 		Connection conn = DBUtil.getConnection();
@@ -325,11 +322,11 @@ public class LibraryDAO {
 		
 		try {
 			st = conn.prepareCall(sql);
-			st.registerOutParameter(2, java.sql.Types.INTEGER);
+			st.registerOutParameter(2, java.sql.Types.VARCHAR);
 			st.setString(1, m_id);
 			st.executeQuery();
 			
-			result = st.getInt(2);
+			message = st.getString(2);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -337,7 +334,7 @@ public class LibraryDAO {
 		} finally {
 			DBUtil.dbClose(null, st, conn);
 		}
-		return result;
+		return message;
 	}
 	
 	public BorrowVO selectRsvBook(String m_id){

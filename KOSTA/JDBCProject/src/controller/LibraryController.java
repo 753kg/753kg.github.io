@@ -1,3 +1,4 @@
+/*
 package controller;
 
 import java.sql.Date;
@@ -60,7 +61,7 @@ public class LibraryController {
 	private static void borrowReturn(Scanner sc, String userID) {
 		boolean run = true;
 		while(run) {
-			System.out.println("1.대출|2.반납|3.예약|4.예약도서대출/반납|5.뒤로가기");
+			System.out.println("1)대출 2)반납 3)예약 4)예약도서대출/반납 5)뒤로가기");
 			System.out.print("선택 >> ");
 			int num = sc.nextInt();
 			switch (num) {
@@ -74,7 +75,7 @@ public class LibraryController {
 				rsvBook(sc, userID);
 				break;
 			case 4:
-				System.out.println("1. 예약도서 대출 | 2. 예약도서 반납");
+				System.out.println("(1)예약도서 대출 (2)예약도서 반납");
 				System.out.print("선택>> ");
 				int num2 = sc.nextInt();
 				switch (num2) {
@@ -126,6 +127,7 @@ public class LibraryController {
 	}
 
 	private static void rsvBookReturn(Scanner sc, String userID) {
+		selectBorrowing(userID);
 		LibraryDAO dao = new LibraryDAO();
 		System.out.print("반납할 예약 도서의 코드 입력 >> ");
 		int borr_code = sc.nextInt();
@@ -190,7 +192,7 @@ public class LibraryController {
 	private static void myPage(Scanner sc, String userID) {
 		boolean run = true;
 		while(run) {
-			System.out.println("1. 개인정보수정 | 2. 대출조회/기간연장 | 3. 대출이력조회 | 4. 예약도서조회 | 5. 로그아웃 | 6. 회원탈퇴 | 7. 뒤로가기");
+			System.out.println("1)개인정보수정 2)대출조회/기간연장 3)대출이력조회 4)예약도서조회 5)로그아웃 6)회원탈퇴 7)뒤로가기");
 			System.out.print("선택 >> ");
 			int num2 = sc.nextInt();
 			switch (num2) {
@@ -199,7 +201,7 @@ public class LibraryController {
 				break;
 			case 2:
 				selectBorrowing(userID);
-				System.out.println("1. 기간연장하기 | 2. 뒤로가기");
+				System.out.println("(1)기간연장하기 (2)뒤로가기");
 				System.out.print("선택 >> ");
 				int num3 = sc.nextInt();
 				switch(num3) {
@@ -220,9 +222,10 @@ public class LibraryController {
 				run = false;
 				break;
 			case 6:
-				quitMembers(sc, userID);
-				userID = null; userPW = null;
-				run = false;
+				if(quitMembers(sc, userID)) {
+					userID = null; userPW = null;
+					run = false;
+				}
 				break;
 			case 7: run = false; break;
 			default: LibraryView.print("유효하지 않은 작업입니다."); break;
@@ -237,11 +240,18 @@ public class LibraryController {
 		LibraryView.printBorrows(borr);
 	}
 
-	private static void quitMembers(Scanner sc, String userID) {
+	private static boolean quitMembers(Scanner sc, String userID) {
 		LibraryDAO dao = new LibraryDAO();
 		System.out.print("비밀번호 확인 >> ");
 		int result = dao.quitMembers(userID, sc.next());
-		LibraryView.print(result>0 ? "회원 탈퇴가 완료되었습니다." : "탈퇴할 수 없습니다.");
+		if(result>0) {
+			LibraryView.print("회원 탈퇴가 완료되었습니다.");
+			return true;
+		}
+		else{
+			LibraryView.print("탈퇴할 수 없습니다.");
+			return false;
+		}
 	}
 
 	private static void extendsDate(Scanner sc, String userID) {
@@ -350,8 +360,8 @@ public class LibraryController {
 	private static void searchBook(Scanner sc) {
 		boolean run = true;
 		while(run) {
-			System.out.println("1.도서명으로 검색 | 2. 작가명으로 검색 | 3.전체 도서 조회 | 4. 카테고리별 조회 | 5. 뒤로가기");
-			System.out.print("작업을 선택하세요 >> ");
+			System.out.println("1)도서명으로 검색 2)작가명으로 검색 3)전체 도서 조회 4)카테고리별 조회 5)뒤로가기");
+			System.out.print("선택 >> ");
 			int num = sc.nextInt();
 			aa : switch (num) {
 			case 1:
@@ -360,7 +370,7 @@ public class LibraryController {
 					sc.nextLine();
 					selectByBookName(sc.nextLine());
 					
-					System.out.println("1.다시 검색하기 | 2. 뒤로가기");
+					System.out.println("(1)도서명 다시 검색하기 (2)뒤로가기");
 					System.out.print("선택 >> ");
 					int num2 = sc.nextInt();
 					if(num2 == 1) continue;
@@ -372,7 +382,7 @@ public class LibraryController {
 					sc.nextLine();
 					selectByAuthor(sc.nextLine());
 					
-					System.out.println("1.다시 검색하기 | 2. 뒤로가기");
+					System.out.println("(1)작가명 다시 검색하기 (2)뒤로가기");
 					System.out.print("선택 >> ");
 					int num2 = sc.nextInt();
 					if(num2 == 1) continue;
@@ -384,7 +394,7 @@ public class LibraryController {
 	
 			case 4:
 				while(true) {
-					System.out.println("1.소설 | 2. 에세이 | 3. 어린이");
+					System.out.println("1)소설 2)에세이 3)어린이");
 					System.out.print("선택 >> ");
 					int num3 = sc.nextInt();
 					switch (num3) {
@@ -393,7 +403,7 @@ public class LibraryController {
 					case 3: selectByCategory("어린이"); break;
 					default: break;
 					}
-					System.out.println("1.다시 검색하기 | 2. 뒤로가기");
+					System.out.println("(1)카테고리 다시 검색하기 (2)뒤로가기");
 					System.out.print("선택 >> ");
 					int num2 = sc.nextInt();
 					if(num2 == 1) continue;
@@ -434,3 +444,4 @@ public class LibraryController {
 	}
 	
 }
+*/
