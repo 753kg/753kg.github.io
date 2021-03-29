@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;LibraryController.java&apos; to &apos;JDBCProject/src/controller&apos;&#x0D;&#x0A;- Original project: &apos;JDBCProject&apos;&#x0D;&#x0A;- Destination element: &apos;JDBCProject/src/controller&apos;&#x0D;&#x0A;- Original element: &apos;controller.LibraryController.java&apos;" description="Copy compilation unit" destination="/src&lt;controller" element1="/src&lt;controller{LibraryController.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1616728294420" units="1" version="1.0"/>
+</session>

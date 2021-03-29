@@ -1,0 +1,8 @@
+INDEX VERSION 1.4+C:\GitRepository\753kg.github.io\KOSTA\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+395755311.index
+436248606.index
+2223570470.index
+3528189559.index
+4109252047.index
+3642535087.index
+744542597.index

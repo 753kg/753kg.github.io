@@ -1,0 +1,17 @@
+package view;
+
+import java.util.List;
+
+import model.BookVO;
+
+public class LibraryView {
+
+	public static void print(List<BookVO> booklist) {
+		int count = 0;
+		for(BookVO book : booklist) {
+			System.out.println(book);
+			count ++;
+		}
+		System.out.println("총 " + count + "건");
+	}
+}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>공간분할태그</title>
+</head>
+<body>
+<!-- 공간분할 : div > p > span -->
+<h1>공간분할태그 연습</h1>
+<div>
+	<p>공간분할에는 div 태그가 있다.</p>
+	<p>관련있는 태그들을 하나의 단락으로 묶을 때 사용 한다.</p>
+	<p>뜻을 갖고있진 않다.</p>
+	<p>공간분할에는 p 태그가 있다.</p>
+	<p>일반적으로 한줄에 사용된다.</p>
+	<p>span : p 태그 안에 <span>특정 부분</span> 쪼개기 </p>
+</div>
+</body>
+</html>

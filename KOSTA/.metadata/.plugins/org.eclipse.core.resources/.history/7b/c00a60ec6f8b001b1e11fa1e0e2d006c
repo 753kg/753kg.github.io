@@ -1,0 +1,14 @@
+package view;
+
+import java.util.List;
+
+import model.BookVO;
+
+public class LibraryView {
+
+	public static void print(List<BookVO> booklist) {
+		for(BookVO book : booklist) {
+			System.out.println(book);
+		}
+	}
+}

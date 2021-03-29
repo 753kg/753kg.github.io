@@ -1,0 +1,5 @@
+INDEX VERSION 1.131
+C:\GitRepository\753kg.github.io\KOSTA\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\538990121.index
+\webProject\src
+C:\GitRepository\753kg.github.io\KOSTA\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1603995483.index
+\webProject\src

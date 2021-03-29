@@ -1,0 +1,26 @@
+package view;
+
+import java.util.List;
+
+import model.BookVO;
+
+public class LibraryView {
+
+	public static void print(List<BookVO> booklist) {
+		int count = 0;
+		for(BookVO book : booklist) {
+			System.out.println(book);
+			count ++;
+		}
+		if(count != 0) System.out.println("총 " + count + "건");
+		else print("검색 결과가 없습니다.");
+	}
+	
+	
+	
+	public static void print(String message) {
+		System.out.println("-------- 알림 -------");
+		System.out.println(message);
+		System.out.println("-------------------");
+	}
+}
