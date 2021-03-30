@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<input type="date">
+<input type="time">
+<!-- datetime은  지원 안됨 -->
+<input type="datetime-local">
+<input type="month">
+<input type="week">
+<input type="email">
+<input type="submit" value="서버전송">
+</body>
+</html>

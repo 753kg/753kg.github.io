@@ -22,4 +22,5 @@
 <fullyQualifiedTypeName name="java.sql.Types"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="util.LoggableStatement"/>
+<fullyQualifiedTypeName name="model.DeptVO"/>
 </qualifiedTypeNameHistroy>

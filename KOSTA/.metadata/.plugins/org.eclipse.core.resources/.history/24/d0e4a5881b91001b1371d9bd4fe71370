@@ -1,0 +1,18 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>부서 DB 등록</title>
+</head>
+<body>
+	<h1>부서 DB 등록합니다.</h1>
+	<hr>
+	<p>부서아이디는 ${param.dept_id}</p>
+	<p>부서이름는 ${param.dept_name}</p>
+	<p>매니저아이디는 ${param.manager_id}</p>
+	<p>location_id는는 ${param.location_id}</p>
+	
+</body>
+</html>

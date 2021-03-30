@@ -1,0 +1,18 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>부서조회</title>
+</head>
+<body>
+<table>
+  <tr>
+    <th>부서번호</th><th>부서이름</th><th>매니저</th><th>지역번호</th>
+  </tr>
+
+</table>
+
+</body>
+</html>

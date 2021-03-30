@@ -15,9 +15,9 @@
 		<list key="C:\GitRepository\753kg.github.io\.git">
 			<item value="false"/>
 			<item value="MyGram &lt;753kg@naver.com&gt;"/>
-			<item value="Merge branch &apos;main&apos; of https://github.com/753kg/753kg.github.io&#x0A;&#x0A;# Conflicts:&#x0A;#&#x09;KOSTA/JDBCProject/bin/.gitignore&#x0A;"/>
+			<item value="# WARNING: head commit changed in the meantime&#x0D;&#x0A;&#x0D;&#x0A;Merge branch &apos;main&apos; of https://github.com/753kg/753kg.github.io&#x0A;&#x0A;# Conflicts:&#x0A;#&#x09;KOSTA/JDBCProject/bin/.gitignore&#x0A;"/>
 			<item value="MyGram &lt;753kg@naver.com&gt;"/>
-			<item value="3fb133f84819e51875199663dc3130d6a09e8346"/>
+			<item value="e9a954fc4495bac64213c04590d6b4d53981af7b"/>
 			<item value="0"/>
 			<item value="false"/>
 		</list>
@@ -32,5 +32,9 @@
 			<item value="600"/>
 			<item value="400"/>
 		</list>
+	</section>
+	<section name="org.eclipse.egit.ui.internal.pull.PullResultDialog.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="772"/>
+		<item key="DIALOG_Y_ORIGIN" value="368"/>
 	</section>
 </section>
