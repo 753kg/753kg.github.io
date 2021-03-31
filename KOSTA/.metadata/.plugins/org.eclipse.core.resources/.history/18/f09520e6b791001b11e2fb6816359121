@@ -1,0 +1,6 @@
+@charset "UTF-8";
+
+p {
+	background-color: lightgreen;
+	border: 1px solid gray;
+}

@@ -6,10 +6,39 @@
   <style>
     
     /* 06\sol-2.html 소스 참고  */
+    #container{
+      /*border:1px solid gray;*/
+      width: 600px;
+      /* auto : 중간에 오도록 오른쪽왼쪽은 자동으로 */
+      margin: 20px auto; /* 중간 정렬 */
+    }
+    
+    h1{
+      display: inline-block;
+      background-color: #0404aa;
+      color: #fff;
+    }
+    
+    span{
+      font-weight: bold;
+      color: red;
+    }
+    
+    a {
+      /* inline은 width가 안먹힘
+         inline-block : inline과 block의 특징을 모두 가짐 */
+      display: inline-block;
+      width : 100px;
+      border:1px solid gray;
+    }
+    
+    sup { color : blue; }
     
   </style>
 </head>
 <body>
+  <a href="#">daum 가기</a>
+  <a href="#">naver 가기</a>
   <div id="container">
     <h1>탐라국 입춘굿</h1>    
     <p>제주도의 문화축제 중에서 유일하게 <span class="accent">전통시대부터 존재했던 축제</span>이다.</p>

@@ -13,13 +13,7 @@
 	</section>
 	<section name="GitCommitMessageComponent">
 		<list key="C:\GitRepository\753kg.github.io\.git">
-			<item value="false"/>
-			<item value="MyGram &lt;753kg@naver.com&gt;"/>
-			<item value="# WARNING: head commit changed in the meantime&#x0D;&#x0A;&#x0D;&#x0A;Merge branch &apos;main&apos; of https://github.com/753kg/753kg.github.io&#x0A;&#x0A;# Conflicts:&#x0A;#&#x09;KOSTA/JDBCProject/bin/.gitignore&#x0A;"/>
-			<item value="MyGram &lt;753kg@naver.com&gt;"/>
-			<item value="e9a954fc4495bac64213c04590d6b4d53981af7b"/>
-			<item value="0"/>
-			<item value="false"/>
+			<item value="empty"/>
 		</list>
 	</section>
 	<section name="org.eclipse.egit.ui.internal.push.PushResultDialog.dialogBounds">

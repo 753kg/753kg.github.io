@@ -11,3 +11,5 @@ C:\GitRepository\753kg.github.io\KOSTA\.metadata\.plugins\org.eclipse.jst.jsp.co
 \webProject\src
 C:\GitRepository\753kg.github.io\KOSTA\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1603995483.index
 \webProject\src
+C:\GitRepository\753kg.github.io\KOSTA\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3993837859.index
+\webProject\src

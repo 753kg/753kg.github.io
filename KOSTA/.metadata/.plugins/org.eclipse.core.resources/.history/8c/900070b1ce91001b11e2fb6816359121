@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>first-child vs first-of-type</title>
+</head>
+<style>
+  p{ border:1px solid gray; }
+  /* first-child : 자식요소로 첫번째*/
+  p:first-child { /* 자식요소인 모든 태그 중에서 p가 첫번째로 나오면*/
+	background-color: orange;
+  }
+  p:first-of-type { /* 자식요소 p태그 중에서 처음 나온 p태그 */
+	color: hotpink;
+  }
+  h1:first-child{ text-align: center; }
+  h2:first-child{ text-align: center; }
+  
+</style>
+
+<body>
+
+  <h1>가상 선택자 연습</h1>
+  <h2>body의 h2... first-child 안됨</h2>
+  <p>body의 자식요소 p</p>
+  
+  <div>
+    <h2>div의 h2... first-child 적용됨</h2>
+  	<p>첫번째 div의 자식요소p1</p>
+ 	<p>p2</p>
+	<p>p3</p>
+	<p>p4</p>
+	<p>p5</p>
+  </div>
+  
+  <div>
+    <h1>두 번째 div</h2>
+  	<p>p1</p>
+ 	<p>p2</p>
+	<p>p3</p>
+	<p>p4</p>
+	<p>p5</p>
+  </div>
+  
+</body>
+</html>

@@ -1,0 +1,8 @@
+
+.id_area, .pw_area {
+	display: block;
+	width:180px;
+	height: 30px;
+	padding: 0px 0px 0px 10px;
+	margin: 10px;
+}
