@@ -45,3 +45,27 @@ body {
 	margin: auto;
 	padding: 7px 25px;
 }
+
+#signup label {
+	float: left;
+	/* 다른방법 ==> display: inline-block; */
+	width: 110px;
+}
+
+#signup input[type="text"], #signup input[type="password"],
+#signup input[type="tel"], #signup input[type="email"] {
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 13px;
+	padding: 5px;
+	width:200px;
+}
+
+
+#signup input[required] {
+	border: 1px solid red;
+}
+
+#signup input[readonly]{
+	border: none;
+}

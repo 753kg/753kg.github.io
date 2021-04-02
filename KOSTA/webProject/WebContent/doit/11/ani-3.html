@@ -8,17 +8,20 @@
       width: 100px;
       height: 100px;
       margin: 60px auto;      
-      animation: rotate 1.5s infinite, background 1.5s infinite alternate;
+      animation: rotate 5s infinite, background 5s infinite alternate;
+      animation-timing-function: ease-in;
     }
 
     @keyframes rotate {  /* 0도 -> x축 -180도 회전 -> y축 -180도 회전 */
-      from { transform: perspective(120px) rotateX(0deg) rotateY(0deg); }
+      from { transform: perspective(120px) rotateX(0deg) rotateY(0deg); 
+     			
+      }
       50% { transform: perspective(120px) rotateX(-180deg) rotateY(0deg); }
       to { transform: perspective(120px) rotateX(-180deg) rotateY(-180deg); }
     }
 
     @keyframes background {  /* 배경색 빨강 -> 초록 -> 파랑 */
-      from { background-color: red; }
+      from { background-color: red;}
       50% { background-color: green }
       to { background-color: blue; }
     }

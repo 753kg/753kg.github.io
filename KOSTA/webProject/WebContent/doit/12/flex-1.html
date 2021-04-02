@@ -15,7 +15,7 @@
     .box {
       padding:5px 45px;
       margin:5px;   
-	  	width:80px;
+	  width:80px;
       background-color:#222;   
     }
     #opt1{
@@ -31,12 +31,36 @@
       flex-direction: column-reverse;  /* 아래에서 위로 */
     }                 
     p {
-      color:#fff;
+      color:red;
       text-align: center;
+    }
+    
+    .container2 {
+      width:700px;
+      display:flex; /* 플렉스 컨테이너 지정 */
+      background-color:seagreen;
+      border:1px solid #222;
+      margin-bottom:30px;
+      flex-direction: row;
+      flex-wrap: wrap;		/* 자동줄바꿈 */
+    }
+    .item {
+      padding:15px 45px;
+      margin:5px;   
+	  width:80px;
+      background-color:white;
     }
   </style>
 </head>
 <body>
+  <div class="container2">
+    <div class="item"><p>AA</p></div>
+    <div class="item"><p>BB</p></div>
+    <div class="item"><p>CC</p></div>
+    <div class="item"><p>DD</p></div>
+    <div class="item"><p>EE</p></div>
+  </div>
+
   <div class="container" id="opt1">
     <div class="box"><p>1</p></div>
     <div class="box"><p>2</p></div>

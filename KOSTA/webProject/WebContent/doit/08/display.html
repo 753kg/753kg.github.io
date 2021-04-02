@@ -4,6 +4,28 @@
   <meta charset="UTF-8">
   <title>CSS display 속성</title>
   <style>
+    /* border-box: contents + border*2 + padding*2 */
+    * {
+      box-sizing: border-box;
+    }
+    ul, li {
+      border:1px solid #222;
+    }
+    nav ul{ /* 상세한 것 우선 */
+      list-style: circle;
+    }
+    ul {
+      list-style: none;
+    }
+    li {
+      display: inline-block; /* list-style이 사라져버림 */
+      width: 100px;
+      padding: 20px;
+      margin: 0 20px;
+      text-align: center;
+    }
+  
+    /* 
     * {
       box-sizing: border-box;
     }
@@ -15,7 +37,7 @@
       padding:20px;
       margin:0 20px;
       border:1px solid #222;
-    }
+    } */
   </style>
 </head>
 <body>

@@ -22,7 +22,7 @@
   width:900px;  /* 본문의 너비 */
   height:600px;  /* 본문의 높이 */
   background-color:#f7f7f7;
-  float:left;  /* 왼쪽으로 플로팅 */
+  float:left;  /* 왼쪽으로 플로팅. 사이드바 옆에 차곡차곡 쌓이도록 */
 }
 #footer {
   width:100%;  /* 부모 요소의 너비와 똑같게  */

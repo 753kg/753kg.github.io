@@ -5,3 +5,21 @@ table, th, td {
 th, td { 
   padding:10px 20px; 
 }
+
+#cal1{
+  background-color:orange !important;
+}
+
+#cal2{
+  width:150px;
+}
+
+tr:nth-child(even) {
+  background-color: lightgreen;
+}
+
+tr:nth-child(odd) {
+  background-color: lightgray;
+}
+
+thead tr th { background-color: yellow; }
