@@ -1,6 +1,0 @@
-div input {
-	display: block;
-	width:180px;
-	height: 30px;
-	padding: 2px 10px;
-}

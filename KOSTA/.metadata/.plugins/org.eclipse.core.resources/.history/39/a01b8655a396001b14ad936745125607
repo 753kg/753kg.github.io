@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>함수연습</title>
+</head>
+<body>
+	<h1>함수연습</h1>
+	<input id="btn1" type="button" value="함수1">
+	<input id="btn1" type="button" value="함수2">
+	<input id="btn1" type="button" value="함수3">
+	<input id="btn1" type="button" value="함수4">
+	<input id="btn1" type="button" value="함수5">
+</body>
+</html>

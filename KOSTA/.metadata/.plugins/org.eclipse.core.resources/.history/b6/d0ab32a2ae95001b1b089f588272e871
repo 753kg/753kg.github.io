@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<script>
+	// 자바스크립트 변수타입 : 동적타입
+	a = 100;
+	document.write("<p>" + a + " ==> " + typeof(a) + "</p>");	// number
+	a = "100";
+	document.write("<p>" + a + " ==> " + typeof(a) + "</p>");	// string
+	a = 10 > 20;
+	document.write("<p>" + a + " ==> " + typeof(a) + "</p>");	// boolean
+	a = 100.9;
+	document.write("<p>" + a + " ==> " + typeof(a) + "</p>");	// 소수점도 number
+	</script>
+
+<body>
+
+</body>
+</html>

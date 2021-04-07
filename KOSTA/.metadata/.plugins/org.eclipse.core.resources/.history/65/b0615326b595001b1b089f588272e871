@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script>
+	// document.write(a + "<br>");	// not defined (error)
+	document.write(b + "<br>");			// undefined
+	// document.write(c + "<br>"); 	// Cannot access 'c' before initialization
+
+	a = 10;
+	var b = 20;
+	let c = 30;
+	
+	document.write(a + "<br>");
+	document.write(b + "<br>");
+	document.write(c + "<br>");
+</script>
+
+</head>
+<body>
+
+</body>
+</html>

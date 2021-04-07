@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Object Test</title>
+<style>
+	#here { background-color: lightyellow; }
+</style>
+<script type="text/javascript">
+	window.onload = function(){
+		here.innerHTML = this;	// this : window
+		btn1.onclick = call1;
+		btn2.onclick = call2;
+		btn3.onclick = call3;
+		btn4.onclick = call4;
+		btn5.onclick = call5;
+		btn6.onclick = call6;
+		btn7.onclick = call7;
+	};
+	
+	function call1(){
+		// object : 속성 + 메서드
+		var obj = {"name":"홍길동", age:20, age2:22, "군대 여부":true, 
+				study:function(){ alert('열심히공부'); }, 
+				자기소개:{"학교":"서울","전공":"컴공"}, 
+				score:[1,2,3,4,5]		
+		};
+		here.innerHTML = "이름은 " + obj.name;
+		here.innerHTML += "<br>나이는 " + obj["age"];	// [] 안에 "" 꼭 써야한다.
+		var aa = "age2";
+		here.innerHTML += "<br>나이는 " + obj[aa];		// ""안쓰면 변수인거
+		here.innerHTML += "<br>군대 여부는 " + obj["군대 여부"];
+		// here.innerHTML += "<br>군대 여부는 " + obj.군대 여부;		// 불가능
+		// here.style["background-color"] = "pink";
+		here.style.backgroundColor = "lightblue";
+		here.innerHTML += "<br>study는 " + obj["study"];
+		obj["study"]();	// 함수 실행
+		here.innerHTML += "<br>자기소개는 " + obj.자기소개.학교;
+		here.innerHTML += "<br>점수는 " + obj.score[4];
+	}
+	function call2(){
+		var person = { 
+				name:"윤인성", 
+				eat:function(food){ 
+					alert("점심먹자~" + food + this.name); // this : person
+				} 
+		};
+		person.eat("돈가스");	// 함수 호출
+		here.innerHTML = this;	// this : btn2
+		
+		for(var key in person){
+			here.innerHTML += "<br>" + key + " --> "+ person[key];
+		}
+	}
+	function call3(){
+		// window에 있는 key
+		for(var key in window){
+			here.innerHTML += "<br>" + key + " --> "+ window[key];
+		}
+	}
+	function call4(){
+		var person = { 
+				name:"윤인성", 
+				eat:function(food){ 
+					alert("점심먹자~" + food + this.name); // this : person
+				} 
+		};
+		person.age = 30;//존재하는 속성이 없으면 추가	
+		person.major = "컴공";
+		person.name = "윤인성2"//존재하는 속성이 있으면 수정
+		person.toString = function(){
+			return this.name + ":" + this.age + ":" + this.major;
+		}
+		delete person.age;
+		for(var key in person){
+			if(typeof(person[key]) == 'function') continue;
+			here.innerHTML += "<br>" + key + " --> "+ person[key];
+		}
+	}
+	function call5(){
+		// 배열 + 객체
+		var arr = [];
+		arr.push( {name:"김길동1", kor:100, eng:90, math:80} );
+		arr.push( {name:"김길동2", kor:100, eng:90, math:80} );
+		arr.push( {name:"김길동3", kor:90, eng:90, math:80} );
+		arr.push( {name:"김길동4", kor:90, eng:80, math:80} );
+		arr.push( {name:"김길동5", kor:100, eng:80, math:80} );
+		
+		// 이름과 총점을 출력
+		for(var i in arr){
+			var sum = 0;
+			for(var key in arr[i]){
+				if(key == 'name') continue;
+				sum += arr[i][key];
+			}
+			here.innerHTML += "<br>" + arr[i]["name"] + " --> "+ sum;
+		}
+	}
+	
+	function call6(){
+		var arr = [];
+		arr.push( makePerson("김길동1", 100, 90, 80) );
+		arr.push( makePerson("김길동2", 70, 90, 80) );
+		arr.push( makePerson("김길동3", 90, 90, 80) );
+		arr.push( makePerson("김길동4", 100, 70, 90) );
+		arr.push( makePerson("김길동5", 60, 100, 90) );
+		
+		for(var i in arr){
+			here.innerHTML += "<br>" + arr[i];
+		}
+	}
+	
+	function makePerson(name, kor, eng, math){
+		var obj = { 
+				"name" : name, 국어:kor, "영어":eng, 수학:math,
+				getSum:function(){ return this.국어 + this.영어 + this.수학; },
+				getAvg:function(){ return this.getSum()/3},
+				toString:function(){ return this.name + "의 평균점수==> " +this.getAvg(); }
+		};
+		
+		return obj;
+	}
+	
+	function call7(){
+		var a = 10;
+		var b = a;	//값 복사
+		a++;
+		here.innerHTML = "<br>a= " + a + " b= " + b;
+	}
+	
+</script>
+</head>
+<body>
+	<button id="btn1">object 사용법1</button>
+	<button id="btn2">object 사용법2</button>
+	<button id="btn3">object 사용법3 - window의 모든 속성</button>
+	<button id="btn4">object 사용법4</button>
+	<button id="btn5">object 사용법5</button>
+	<button id="btn6">함수로 객체 만들기</button>
+	<button id="btn7">복사(값?주소?)</button>
+	<hr>
+	<div id="here">여기</div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+  alert("1");
+</script>
+</head>
+<body>
+<h1>JavaScript 연습 (표준이름:ECMAScript, EC6기준)</h1>
+</body>
+</html>

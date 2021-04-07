@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>미디어 쿼리 사용하기</title>
+  <style>
+    
+    /* 기본 */
+    body {
+      background: url(images/bg0.jpg) no-repeat fixed;  /* 기본 배경 이미지 지정 */
+      background-size: cover;
+    }
+    @import url("css/m1024.css") screen and (max-width:1024px);
+    @import url("css/m768.css") screen and (max-width:768px);
+    @import url("css/m320.css") screen and (max-width:320px);
+    
+  </style>
+</head>
+<body>
+  
+</body>
+</html>

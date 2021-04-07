@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>내장 객체</title>
+<script type="text/javascript">
+	window.onload = function() {
+		btn1.onclick = function(){
+			// 자바는 기본형, wrapper class=기본형+기능
+			// 자바스크립트는 기본형이지만 기능을 갖고있다.
+			// JS => 기본형, 객체형 모두 같은 기능을 갖는다.
+			var num1 = 10;
+			var num2 = new Number(20);	//내장객체
+			here.innerHTML = "기본형: " + num1.toString(2) + ", " + typeof(num1); // toString radix에 2대입 : 2진수로 바꾸기
+			here.innerHTML += "<br>Number객체형: " + num2.toString(2) + ", " + typeof(num2);
+			// ** 차이점 : 객체형에는 기능을 추가할 수 있다. 기본형엔 불가능 **
+			num1.print1 = function(){ here.innerHTML += "<br>기본형 메서드 추가"; };
+			num2.print2 = function(){ here.innerHTML += "<br>Number객체형 메서드 추가"; };
+			//num1.print1();	// 에러 : num1.print1 is not a function
+			num2.print2();
+		};
+		btn2.onclick = function(){
+			var s = "KOSTA";
+			here.innerHTML = s.bold();	// <b>태그로 감싸서 리턴. bold
+			here.innerHTML += "<br>" + s.italics();	//
+		};
+	}
+</script>
+</head>
+<body>
+	<button id="btn1">기본타입과 객체타입 비교</button>
+	<button id="btn2">String</button>
+	<button id="btn3">object 사용법3 - window의 모든 속성</button>
+	<button id="btn4">object 사용법4</button>
+	<button id="btn5">object 사용법5</button>
+	<button id="btn6">함수로 객체 만들기</button>
+	<button id="btn7">복사(값,주소)</button>
+	<button id="btn8">JSON</button>
+	<button id="btn9">생성자함수</button>
+	<button id="btn10">상속</button>
+	<hr>
+	<div id="here">출력</div>
+</body>
+</html>

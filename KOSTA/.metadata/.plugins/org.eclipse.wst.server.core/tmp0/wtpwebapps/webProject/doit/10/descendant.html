@@ -21,6 +21,9 @@
    section p {  /* section 요소의 모든 하위 p 요소에 적용 */
       color:blue;   /* 글자색을 파란색으로 */
     }
+    section > p {  /* section 요소의 바로 밑 자식 p 요소에 적용 */
+      background-color:lightyellow;
+    }
   </style>
 </head>
 <body>
@@ -30,6 +33,7 @@
     <div>
       <p>가족실(2~4인) : 60,000원/일</p>
       <p>도미토리(4인 공용) : 25,000원/일</p>
+    </div>
   </section>   
 </body>
 </html>
