@@ -1,8 +1,0 @@
-/**
- * 
- */
-
-document.querySelector(".over").onclick = function(){
-	this.display = "none";
-	document.querySelector(".detail").display = "block";
-}
