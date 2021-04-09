@@ -2,11 +2,7 @@
 <%@page import="model.EmpDAO"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="EUC-KR">
-<title>Insert title here</title>
+
 <%
 String userid = request.getParameter("userid");	//웹에서 받은 값
 int empid = Integer.parseInt(userid);	// id는 숫자로만 입력해야한다.
@@ -17,8 +13,8 @@ if(emp != null){
 		message = emp.getFirst_name()+" "+emp.getLast_name()+" 님 환영합니다!";
 }
 
+//JASON :: 문자는 "", 숫자는 ""안해도됨 
 %>
-<!-- JASON :: 문자는 "", 숫자는 ""안해도됨 -->
 {
 "fname":"<%=emp.getFirst_name() %>",
 "lname":"<%=emp.getLast_name() %>",

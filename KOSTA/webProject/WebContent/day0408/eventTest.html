@@ -48,8 +48,8 @@
 			return true;
 		}
 		// 버블링 막기
-		// 1. 고전적 이벤트 모델
 		var p = document.querySelector("#p2");
+		// 1. 고전적 이벤트 모델
 		/* p.onclick = function(ev){
 			alert("p태그입니다.")
 			if(ev.stopPropagation){
@@ -62,11 +62,11 @@
 		p.addEventListener("click", function(ev) {
 			alert("p태그입니다.")
 			if(ev.stopPropagation){
-				ev.stopImmediatePropagation();
+				ev.stopImmediatePropagation();	// 같은 요소의 다른 이벤트도 막고, 상위로 가는 이벤트도 막는다.
 			}else {
 				ev.cancelBubble = false;
 			}
-		}, false);
+		}, false);	// true:캡쳐링, false:버블링??
 		
 		// 표준 이벤트 모델				// 버튼5를 눌렀다.
 		btn5.addEventListener("click", function(e) {
