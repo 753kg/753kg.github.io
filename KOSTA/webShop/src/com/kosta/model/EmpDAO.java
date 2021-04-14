@@ -39,6 +39,30 @@ public class EmpDAO {
 		
 		return emplist;
 	}
+	
+	public List<String> selectAllJob() {
+		List<String> joblist = new ArrayList<>();
+		
+		Connection conn = DBUtil.getConnection();
+		Statement st = null;
+		ResultSet rs = null;
+		String sql = "select distinct job_id from employees";
+		
+		try {
+			st = conn.createStatement();
+			rs = st.executeQuery(sql);
+			while(rs.next()) {
+				joblist.add(rs.getString("job_id"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(rs, st, conn);
+		}
+		
+		return joblist;
+	}
 
 	// 2. �⺻Ű(Primary key)... null �Ұ�, �ʼ� �÷�, �ߺ� ����
 	//    ������ȣ�� ��ȸ

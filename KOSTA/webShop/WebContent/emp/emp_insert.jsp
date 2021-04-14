@@ -1,3 +1,6 @@
+<%@page import="com.kosta.model.ManagerVO"%>
+<%@page import="com.kosta.model.DeptVO"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -6,13 +9,18 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-	input { margin-bottom: 10px; }
+	input, select { margin-bottom: 10px; width:130px; height:20px;}
 	label { 
 		display:inline-block; 
 		width:80px; 
 		text-align: left;
 	}
 </style>
+<%
+List<String> joblist = (List<String>)request.getAttribute("joblist");
+List<DeptVO> deptlist = (List<DeptVO>)request.getAttribute("deptlist");
+List<ManagerVO> mlist = (List<ManagerVO>)request.getAttribute("mlist");
+%>
 </head>
 <body>
 	<h1>직원 신규 등록</h1>
@@ -28,17 +36,32 @@
 		<label>전화번호:</label>
 		<input type="text" name="phone_number"><br>
 		<label>입사일:</label>
-		<input type="text" name="hire_date" placeholder="YYYY-MM-DD"><br>
+		<input type="date" name="hire_date"><br>
 		<label>JOB:</label>
-		<input type="text" name="job_id"><br>
+		<select name="job_id">
+			<option value="" selected disabled hidden>==선택==</option>
+			<%for(String job : joblist) {%>
+			<option><%=job %></option>
+			<%} %>
+		</select><br>
 		<label>급여:</label>
 		<input type="number" name="salary"><br>
 		<label>커미션:</label>
 		<input type="number" step=0.01 name="commission_pct"><br>
 		<label>매니저:</label>
-		<input type="number" name="manager_id"><br>
+		<select name="manager_id">
+			<option value="" selected disabled hidden>==선택==</option>
+			<%for(ManagerVO m : mlist) {%>
+			<option value=<%=m.getManager_id()%>><%=m.getFullname()%></option>
+			<%} %>
+		</select><br>
 		<label>부서:</label>
-		<input type="number" name="department_id"><br>
+		<select name="department_id">
+			<option value="" selected disabled hidden>==선택==</option>
+			<%for(DeptVO dept : deptlist) {%>
+			<option value=<%=dept.getDepartment_id()%>><%=dept.getDepartment_name() %></option>
+			<%} %>
+		</select><br>
 		<input type="submit" value="등록하기">
 	</form>
 </body>
