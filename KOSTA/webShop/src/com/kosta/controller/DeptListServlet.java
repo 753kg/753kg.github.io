@@ -20,7 +20,7 @@ import com.kosta.model.DeptVO;
  * 
  * 주소창엔 deptlist로 보이지만 내용은 dept_retrieve.jsp의 내용이다.
  */
-@WebServlet("/deptlist")
+@WebServlet("/dept/deptlist")
 public class DeptListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

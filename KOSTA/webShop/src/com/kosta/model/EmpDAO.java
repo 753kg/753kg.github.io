@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class EmpDAO {
 		Connection conn = DBUtil.getConnection();
 		Statement st = null;
 		ResultSet rs = null;
-		String sql = "select * from employees";
+		String sql = "select * from employees order by 1";
 		
 		try {
 			st = conn.createStatement();
@@ -261,6 +262,117 @@ public class EmpDAO {
 		}
 		
 		return emplist;
+	}
+	
+	public int insertEmp(EmpVO emp) {
+		String sql = "insert into employees values(?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?)";
+		Connection conn;
+		PreparedStatement st = null;
+		int result = 0;
+		
+		conn = DBUtil.getConnection();
+		try {
+			st = conn.prepareStatement(sql);
+			st.setInt(1, emp.getEmployee_id());
+			st.setString(2, emp.getFirst_name());
+			st.setString(3, emp.getLast_name());
+			st.setString(4, emp.getEmail());
+			st.setString(5, emp.getPhone_number());
+			st.setDate(6, emp.getHire_date());
+			st.setString(7, emp.getJob_id());
+			st.setInt(8, emp.getSalary());
+			st.setDouble(9, emp.getCommission_pct());
+			if(emp.getManager_id() == 0) st.setNull(10, Types.INTEGER);
+			else st.setInt(10, emp.getManager_id());
+			st.setInt(11, emp.getDepartment_id());
+			result = st.executeUpdate();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		
+		return result;	
+	}
+	
+	public int updateEmp(EmpVO emp) {
+		String sql = "update employees "
+				+ "set first_name=?, "
+				+ "last_name=?, "
+				+ "email=?, "
+				+ "phone_number=?, "
+				+ "hire_date=?, "
+				+ "job_id=?, "
+				+ "salary=?, "
+				+ "commission_pct = ?, "
+				+ "manager_id=?, "
+				+ "department_id=? "
+				+ "where employee_id = ?";
+		Connection conn;
+		PreparedStatement st = null;
+		int result = 0;
+		
+		conn = DBUtil.getConnection();
+		try {
+			st = conn.prepareStatement(sql);
+			st.setString(1, emp.getFirst_name());
+			st.setString(2, emp.getLast_name());
+			st.setString(3, emp.getEmail());
+			st.setString(4, emp.getPhone_number());
+			st.setDate(5, emp.getHire_date());
+			st.setString(6, emp.getJob_id());
+			st.setInt(7, emp.getSalary());
+			st.setDouble(8, emp.getCommission_pct());
+			if(emp.getManager_id() == 0) st.setNull(9, Types.INTEGER);
+			else st.setInt(9, emp.getManager_id());
+			st.setInt(10, emp.getDepartment_id());
+			st.setInt(11, emp.getEmployee_id());
+			result = st.executeUpdate();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		
+		return result;	
+	}
+	
+	public int deleteEmp(int empid) {
+		String sql = "delete from employees where employee_id = ?";
+		Connection conn;
+		PreparedStatement st = null;
+		int result = 0;
+		
+		conn = DBUtil.getConnection();
+		try {
+			st = conn.prepareStatement(sql);
+			st.setInt(1, empid);
+			result = st.executeUpdate();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(null, st, conn);
+		}
+		
+		return result;
 	}
 	
 

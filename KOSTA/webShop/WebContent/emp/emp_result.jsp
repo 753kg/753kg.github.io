@@ -4,11 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="refresh" content="3; url=emplist">
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>부서 상세 보기</h1>
-	${dept}<br>
-	${myname}
+	<h1>${message }</h1>
 </body>
 </html>

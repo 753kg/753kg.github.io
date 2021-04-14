@@ -1,6 +1,7 @@
 package com.kosta.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,43 +12,29 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.kosta.model.DeptDAO;
 import com.kosta.model.DeptVO;
+import com.kosta.model.EmpDAO;
+import com.kosta.model.LocationVO;
 
 /**
- * Servlet implementation class DeptDetailServlet
+ * Servlet implementation class DeptInsertServlet
  */
-@WebServlet("/dept/deptDetail")
-public class DeptDetailServlet extends HttpServlet {
+@WebServlet("/dept/deptInsert")
+public class DeptInsertServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public DeptDetailServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 목적: 조회(상세보기)
-		String s_deptid = request.getParameter("deptid");
-		int i_deptid = Integer.parseInt(s_deptid);
+		// 입력하는 페이지 보여주기(페이지 연결)
 		DeptDAO dao = new DeptDAO();
-		DeptVO dept = dao.selectById(i_deptid);
-		request.setAttribute("dept", dept);
-		request.setAttribute("myname", "kcy");
-		//JSP에게 위임
-		RequestDispatcher rd = request.getRequestDispatcher("dept_detail.jsp");
+		//List<LocationVO> loclist = dao.selectAllLocation();
+		//request.setAttribute("loclist", loclist);
+		request.setAttribute("loclist", dao.selectAllLocation());
+		request.setAttribute("mlist", dao.selectAllManager());
+		RequestDispatcher rd = request.getRequestDispatcher("dept_insert.jsp");
 		rd.forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 목적: 수정
+		// 입력된 부서를 DB에 입력
 		request.setCharacterEncoding("utf-8");
 		int deptid = convertInt(request.getParameter("department_id"));
 		String dname = request.getParameter("department_name");
@@ -56,10 +43,10 @@ public class DeptDetailServlet extends HttpServlet {
 		
 		DeptVO dept = new DeptVO(deptid, dname, mid, locid);
 		DeptDAO dao = new DeptDAO();
-		int result = dao.updateDept(dept);	//업데이트된건수가return됨
-		System.out.println(result + "건 수정");
+		int result = dao.insertDept(dept);
+		System.out.println(result + "건 등록");
 		//JSP에게 위임
-		request.setAttribute("message", result + "건이 수정되었습니다.");
+		request.setAttribute("message", result + "건이 등록되었습니다.");
 		RequestDispatcher rd = request.getRequestDispatcher("resultInfo.jsp");
 		rd.forward(request, response);
 		
@@ -67,7 +54,7 @@ public class DeptDetailServlet extends HttpServlet {
 	}
 	
 	private int convertInt(String str) {
-		if(str == null) return 0;
+		if(str == null || str.trim() == "") return 0;
 		return Integer.parseInt(str);
 	}
 
