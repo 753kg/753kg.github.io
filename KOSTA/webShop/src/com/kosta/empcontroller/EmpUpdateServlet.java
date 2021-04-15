@@ -39,12 +39,26 @@ public class EmpUpdateServlet extends HttpServlet {
 		emp.setCommission_pct(ConvertUtil.convertDouble(request.getParameter("commission_pct")));
 		emp.setManager_id(ConvertUtil.convertInt(request.getParameter("manager_id")));
 		emp.setDepartment_id(ConvertUtil.convertInt(request.getParameter("department_id")));
+		
 		EmpDAO dao = new EmpDAO();
 		int result = dao.updateEmp(emp);
 		String message = result>0?"수정성공":"수정실패";
 		request.setAttribute("message", message);
-		RequestDispatcher rd = request.getRequestDispatcher("emp_result.jsp");
-		rd.forward(request, response);
+		
+		// 응답문서의 header 정보 변경하기
+		// response.setHeader("refresh", "3;url=emplist");
+		
+		// 위임은 주소창 안바뀜
+		//RequestDispatcher rd = request.getRequestDispatcher("emp_result.jsp");
+		//rd.forward(request, response);
+		
+		// 주소창이 변경된다. (요청 재지정)
+		// result는 못보고 바로 list로 감
+		request.setAttribute("info", "요청재지정시 request는 전달안됨");
+		response.sendRedirect("emplist");
+		
+		// request(공유자원영역)에 데이터를 저장해놓음
+		// request.setAttribute
 	}
 	
 

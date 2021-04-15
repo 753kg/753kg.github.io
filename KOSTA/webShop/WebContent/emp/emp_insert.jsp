@@ -1,3 +1,4 @@
+<%@page import="com.kosta.model.JobVO"%>
 <%@page import="com.kosta.model.ManagerVO"%>
 <%@page import="com.kosta.model.DeptVO"%>
 <%@page import="java.util.List"%>
@@ -17,7 +18,7 @@
 	}
 </style>
 <%
-List<String> joblist = (List<String>)request.getAttribute("joblist");
+List<JobVO> joblist = (List<JobVO>)request.getAttribute("joblist");
 List<DeptVO> deptlist = (List<DeptVO>)request.getAttribute("deptlist");
 List<ManagerVO> mlist = (List<ManagerVO>)request.getAttribute("mlist");
 %>
@@ -37,11 +38,11 @@ List<ManagerVO> mlist = (List<ManagerVO>)request.getAttribute("mlist");
 		<input type="text" name="phone_number"><br>
 		<label>입사일:</label>
 		<input type="date" name="hire_date"><br>
-		<label>JOB:</label>
+		<label>직책:</label>
 		<select name="job_id">
-			<option value="" selected disabled hidden>==선택==</option>
-			<%for(String job : joblist) {%>
-			<option><%=job %></option>
+			<option value="" selected disabled hidden>===선택===</option>
+			<%for(JobVO job : joblist) {%>
+			<option value="<%=job.getJob_id()%>"><%=job.getJob_title() %></option>
 			<%} %>
 		</select><br>
 		<label>급여:</label>
@@ -50,20 +51,22 @@ List<ManagerVO> mlist = (List<ManagerVO>)request.getAttribute("mlist");
 		<input type="number" step=0.01 name="commission_pct"><br>
 		<label>매니저:</label>
 		<select name="manager_id">
-			<option value="" selected disabled hidden>==선택==</option>
+			<option value="" selected disabled hidden>===선택===</option>
 			<%for(ManagerVO m : mlist) {%>
 			<option value=<%=m.getManager_id()%>><%=m.getFullname()%></option>
 			<%} %>
 		</select><br>
 		<label>부서:</label>
 		<select name="department_id">
-			<option value="" selected disabled hidden>==선택==</option>
+			<option value="" selected disabled hidden>===선택===</option>
 			<%for(DeptVO dept : deptlist) {%>
 			<option value=<%=dept.getDepartment_id()%>><%=dept.getDepartment_name() %></option>
 			<%} %>
 		</select><br>
 		<input type="submit" value="등록하기">
 	</form>
+	<br>
+	<h1>${appInfo }</h1>
 </body>
 </html>
 <!-- 숙제 : JOB, 매니저, 부서 선택으로 바꾸기!! -->

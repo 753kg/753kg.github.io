@@ -40,19 +40,20 @@ public class EmpDAO {
 		return emplist;
 	}
 	
-	public List<String> selectAllJob() {
-		List<String> joblist = new ArrayList<>();
+	public List<JobVO> selectAllJobs() {
+		List<JobVO> joblist = new ArrayList<>();
 		
 		Connection conn = DBUtil.getConnection();
 		Statement st = null;
 		ResultSet rs = null;
-		String sql = "select distinct job_id from employees";
+		String sql = "select * from jobs order by 1";
 		
 		try {
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
 			while(rs.next()) {
-				joblist.add(rs.getString("job_id"));
+				JobVO job = new JobVO(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4));
+				joblist.add(job);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -53,6 +53,14 @@ List<EmpVO> emplist = (List<EmpVO>)request.getAttribute("emplist");
 		</tr>
 		<%} %>
 	</table>
+	<br>
+	<ul>
+		<li>myname: ${myname}</li>
+		<li>myscore: <%=request.getAttribute("myscore") %></li>
+		<li>myemp: ${myemp}</li>
+		<li>info: ${info}</li>
+	</ul>
+	<br>
 	<script>
 		function call(empid){
 			// get방식

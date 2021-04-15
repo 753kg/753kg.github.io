@@ -20,12 +20,13 @@ public class EmpDeleteServlet extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String obj = request.getParameter("empid");
-		if(obj == null) throw new ServletException("empid가 없음");
+		if(obj == null || obj == "") throw new ServletException("삭제할 empid가 없음");
+		
 		
 		int empid = Integer.parseInt(obj);
 		EmpDAO dao = new EmpDAO();
 		int result = dao.deleteEmp(empid);
-		request.setAttribute("message", result + "건 삭제되었습니다.");
+		request.setAttribute("message", result>0?"삭제성공":"삭제실패");
 		RequestDispatcher rd = request.getRequestDispatcher("emp_result.jsp");
 		rd.forward(request, response);
 	}

@@ -36,7 +36,7 @@ public class EmpInsertServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EmpDAO empdao = new EmpDAO();
 		DeptDAO deptdao = new DeptDAO();
-		request.setAttribute("joblist", empdao.selectAllJob());
+		request.setAttribute("joblist", empdao.selectAllJobs());
 		request.setAttribute("deptlist", deptdao.selectAll());
 		request.setAttribute("mlist", deptdao.selectAllManager());
 		RequestDispatcher rd = request.getRequestDispatcher("emp_insert.jsp");

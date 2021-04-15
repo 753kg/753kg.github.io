@@ -4,11 +4,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="3; url=emplist">
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>${message }</h1>
-	<h1>${appInfo }</h1>
+<h1>second페이지에서 가져오기</h1>
+<p>application: ${myAge_app }</p>
+<p>session: ${myAge_session }</p>
+<p>request: ${myAge_rq }</p>
+<p>pageContext: ${myAge_page }</p>
 </body>
 </html>
