@@ -30,6 +30,7 @@ String myjob = ((EmpVO)request.getAttribute("emp")).getJob_id();
 </head>
 <body>
 	<h1>직원 정보 수정</h1>
+	<jsp:include page="../common/header.jsp"></jsp:include>
 	<form id="myfrm" action="empUpdate" method="post">
 		<!-- emp는 request.getAttribute("emp")와 같다. -->
 		<label>직원번호:</label>

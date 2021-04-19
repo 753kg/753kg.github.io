@@ -25,6 +25,7 @@ List<ManagerVO> mlist = (List<ManagerVO>)request.getAttribute("mlist");
 </head>
 <body>
 	<h1>직원 신규 등록</h1>
+	<jsp:include page="../common/header.jsp"></jsp:include>
 	<form action="empInsert" method="post">
 		<label>직원번호:</label>
 		<input type="text" name="employee_id"><br>

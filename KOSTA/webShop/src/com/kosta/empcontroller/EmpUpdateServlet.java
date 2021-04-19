@@ -25,7 +25,7 @@ public class EmpUpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
+		//request.setCharacterEncoding("utf-8");
 		
 		EmpVO emp = new EmpVO();
 		emp.setEmployee_id(ConvertUtil.convertInt(request.getParameter("employee_id")));

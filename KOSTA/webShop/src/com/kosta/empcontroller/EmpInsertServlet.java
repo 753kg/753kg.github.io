@@ -48,7 +48,7 @@ public class EmpInsertServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// DB에 insert
-		request.setCharacterEncoding("utf-8");
+		//request.setCharacterEncoding("utf-8");
 		
 		EmpVO emp = new EmpVO();
 		emp.setEmployee_id(ConvertUtil.convertInt(request.getParameter("employee_id")));

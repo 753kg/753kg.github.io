@@ -1,19 +1,20 @@
 package com.kosta.empcontroller;
 
 import java.io.IOException;
-import java.util.List;
+import java.net.URLDecoder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.kosta.model.EmpDAO;
 import com.kosta.model.EmpVO;
-import com.sun.glass.ui.Application;
 
 /**
  * Servlet implementation class EmpListServlet
@@ -50,13 +51,36 @@ public class EmpListServlet extends HttpServlet {
 		// ServletContext app2 = getServletContext();	//싱글톤
 		app.setAttribute("appInfo", "우리사이트에 오신것을 환영합니다.");
 		
+		// 1.쿠키얻기
+		Cookie[] cs = request.getCookies();
+		for(Cookie c:cs) {
+			String name = c.getName();		//key
+			String value = c.getValue();	//value
+			if(name.equals("username")) {
+				request.setAttribute("username", URLDecoder.decode(value, "utf-8"));
+			}
+			System.out.println(name + ":" + value);
+			System.out.println("========================");
+		} 
+		
+		/* 2. 세션 이용 */
+		// 로그인 안하면 emplist를 볼 수 없음. 자동으로 로그인창으로 간다.
+		// 로그인하고 가면 보임
+		// setMaxInactiveInterval(60) ==> 1분지나면 session 없어져서 새로고침하면 다시 로그인창으로 감
+		HttpSession session = request.getSession();	//있으면 얻고, 없으면 만들기
+		// 새로 만들면 obj엔 아무것도 없게됨
+		Object obj = session.getAttribute("empid");
+		if(obj == null) {
+			response.sendRedirect("../login/loginChk.kosta");
+			return;	//밑 코드 실행 못하게
+		}
 		
 		RequestDispatcher rd = request.getRequestDispatcher("emplist.jsp");
 		rd.forward(request, response);
 		
-		System.out.println("info:" + request.getAttribute("info"));
-		System.out.println("dbname:" + app.getInitParameter("dbname"));
-		System.out.println("userid:" + app.getInitParameter("userid"));
+		//System.out.println("info:" + request.getAttribute("info"));
+		//System.out.println("dbname:" + app.getInitParameter("dbname"));
+		//System.out.println("userid:" + app.getInitParameter("userid"));
 		
 	}
 }

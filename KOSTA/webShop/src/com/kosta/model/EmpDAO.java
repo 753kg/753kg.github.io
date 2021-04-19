@@ -15,6 +15,33 @@ import com.kosta.util.DBUtil;
 // DAO(Data Access Object) : DB�� ���� �۾��ؾ��ϴ� ����Ͻ� ����
 public class EmpDAO {
 	
+							//아이디, 비밀번호 라고 생각...
+	public EmpVO loginChk(int empid, String email) {
+		EmpVO emp = null;
+		
+		Connection conn = DBUtil.getConnection();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String sql = "select * from employees where employee_id = ? and email = ?";
+		
+		try {
+			st = conn.prepareStatement(sql);
+			st.setInt(1, empid);
+			st.setString(2, email);
+			rs = st.executeQuery();
+			while(rs.next()) {
+				emp = makeEmp(rs);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(rs, st, conn);
+		}
+		
+		return emp;
+	}
+	
 	// 1. ��� ���� ��ȸ
 	public List<EmpVO> selectAll() {
 		List<EmpVO> emplist = new ArrayList<>();

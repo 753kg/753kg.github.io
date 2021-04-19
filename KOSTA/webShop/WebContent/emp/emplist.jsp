@@ -13,11 +13,16 @@
 	tr:first-of-type { background-color: lightgray; }
 </style>
 <%
-List<EmpVO> emplist = (List<EmpVO>)request.getAttribute("emplist");
+List<EmpVO> emplist = (List<EmpVO>)request.getAttribute("emplist2");
 %>
 </head>
 <body>
 	<h1>직원 전부 조회</h1>
+	<h2>로그인정보: ${username}</h2>
+	<%-- jsp 주석 --%>
+	<%//자바주석은 html 소스보기하면 안보인다. %>
+	<!-- 표준액션: header와 emplist 따로 컴파일 후 합침 -->
+	<jsp:include page="../common/header.jsp"></jsp:include>
 	<a href="empInsert">신규등록</a>
 	<table>
 		<tr>
@@ -61,6 +66,8 @@ List<EmpVO> emplist = (List<EmpVO>)request.getAttribute("emplist");
 		<li>info: ${info}</li>
 	</ul>
 	<br>
+	<!-- 디렉티브 태그: footer와 emplist 합쳐서 컴파일. -->
+	<%@ include file="../common/footer.jsp" %>
 	<script>
 		function call(empid){
 			// get방식

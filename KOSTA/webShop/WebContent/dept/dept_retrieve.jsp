@@ -18,6 +18,7 @@ List<DeptVO> dlist = (List<DeptVO>)request.getAttribute("deptAll");
 </head>
 <body>
 	<h1>부서전체목록</h1>
+	<jsp:include page="../common/header.jsp"></jsp:include>
 	<a href="deptInsert">신규등록</a><!-- 무조건 servlet으로 이동(controller로) -->
 	<table>
 		<tr>
