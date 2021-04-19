@@ -13,7 +13,7 @@
 	tr:first-of-type { background-color: lightgray; }
 </style>
 <%
-List<EmpVO> emplist = (List<EmpVO>)request.getAttribute("emplist2");
+List<EmpVO> emplist = (List<EmpVO>)request.getAttribute("emplist");
 %>
 </head>
 <body>
