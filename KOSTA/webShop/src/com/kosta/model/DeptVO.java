@@ -8,7 +8,6 @@ public class DeptVO {
 	int location_id;
 	
 	public DeptVO() {
-		// pull test
 	}
 	
 	public DeptVO(int department_id, String department_name, int manager_id, int location_id) {
@@ -37,6 +36,7 @@ public class DeptVO {
 		this.manager_id = manager_id;
 	}
 	public int getLocation_id() {
+		System.out.println("getLocation_id: " + location_id);
 		return location_id;
 	}
 	public void setLocation_id(int location_id) {

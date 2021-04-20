@@ -77,6 +77,7 @@ public class LoginServlet extends HttpServlet {
 		session.setAttribute("empid", empid);	// 숫자도 들어감
 		session.setAttribute("email", email);
 		session.setAttribute("empInfo", emp);
+		session.setAttribute("emp", emp);
 		session.setAttribute("username", emp.getFirst_name()+" "+emp.getLast_name());
 		//session.setMaxInactiveInterval(60);		// 60초만 유지하기 default는 30분
 		

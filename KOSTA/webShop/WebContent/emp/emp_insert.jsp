@@ -26,7 +26,7 @@ List<ManagerVO> mlist = (List<ManagerVO>)request.getAttribute("mlist");
 <body>
 	<h1>직원 신규 등록</h1>
 	<jsp:include page="../common/header.jsp"></jsp:include>
-	<form action="empInsert" method="post">
+	<form action="empInsert" method="post" enctype="multipart/form-data">
 		<label>직원번호:</label>
 		<input type="text" name="employee_id"><br>
 		<label>성:</label>
@@ -64,6 +64,8 @@ List<ManagerVO> mlist = (List<ManagerVO>)request.getAttribute("mlist");
 			<option value=<%=dept.getDepartment_id()%>><%=dept.getDepartment_name() %></option>
 			<%} %>
 		</select><br>
+		<label>사진:</label>
+		<input type="file" name="photos"><br>
 		<input type="submit" value="등록하기">
 	</form>
 	<br>

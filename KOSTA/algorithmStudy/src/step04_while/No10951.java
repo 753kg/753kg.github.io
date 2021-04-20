@@ -10,14 +10,14 @@ public class No10951 {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		//StringTokenizer st;
+		StringTokenizer st;
 		String s = "";
 		while((s=br.readLine())!= null) {
-			int a = s.charAt(0) - 48;
-			int b = s.charAt(2) - 48;
-			//st = new StringTokenizer(s);
-			//sb.append(Integer.parseInt(st.nextToken()) + Integer.parseInt(st.nextToken())).append("\n");
-			sb.append(a+b).append("\n");
+			//int a = s.charAt(0) - 48;
+			//int b = s.charAt(2) - 48;
+			//sb.append(a+b).append("\n");
+			st = new StringTokenizer(s);
+			sb.append(Integer.parseInt(st.nextToken()) + Integer.parseInt(st.nextToken())).append("\n");
 		}
 		System.out.println(sb);
 	}
