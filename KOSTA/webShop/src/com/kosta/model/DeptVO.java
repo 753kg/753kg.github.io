@@ -8,7 +8,7 @@ public class DeptVO {
 	int location_id;
 	
 	public DeptVO() {
-		
+		// pull test
 	}
 	
 	public DeptVO(int department_id, String department_name, int manager_id, int location_id) {
