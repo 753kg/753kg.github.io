@@ -7,6 +7,10 @@ public class DeptVO {
 	int manager_id;
 	int location_id;
 	
+	public DeptVO() {
+		
+	}
+	
 	public DeptVO(int department_id, String department_name, int manager_id, int location_id) {
 		super();
 		this.department_id = department_id;
