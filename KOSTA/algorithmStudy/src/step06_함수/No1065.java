@@ -1,8 +1,6 @@
-package step06_ÇÔ¼ö;
+package step06_í•¨ìˆ˜;
 
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
 public class No1065 {
 

@@ -1,4 +1,4 @@
-package step06_ÇÔ¼ö;
+package step06_í•¨ìˆ˜;
 
 public class No4673 {
 	
