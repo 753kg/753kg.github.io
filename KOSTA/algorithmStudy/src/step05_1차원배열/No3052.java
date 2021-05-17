@@ -1,4 +1,4 @@
-package step05_1Â÷¿ø¹è¿­;
+package step05_1ì°¨ì›ë°°ì—´;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class No3052 {
 
 }
 
-/* Áßº¹Ã¼Å©
+/* ï¿½ßºï¿½Ã¼Å©
 public class No3052 {
 
 	public static void main(String[] args) throws NumberFormatException, IOException {

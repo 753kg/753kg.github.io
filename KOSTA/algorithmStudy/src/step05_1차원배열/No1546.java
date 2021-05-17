@@ -1,4 +1,4 @@
-package step05_1Â÷¿ø¹è¿­;
+package step05_1ì°¨ì›ë°°ì—´;
 
 import java.io.BufferedReader;
 import java.io.IOException;
